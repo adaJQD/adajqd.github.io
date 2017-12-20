@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.3" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png?v=5.1.3">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png?v=5.1.3">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png?v=5.1.3">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.3" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Mosby," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="英文原文 这里有一些如何使用Mosby来建立一个基于MVP的架构的简单的例子。我们假设你已经知道“MVP - passive view”，如果不是，你应该考虑阅读MVP部分 : MVP原理/)，以便在继续之前了解MVP的基本知识。 Hello MVP World在这个非常简单的例子中，我们假设view要显示一个TextView，这个TextView显示“Hello”和一个随机数字，或者“Goodb">
+<meta name="keywords" content="Mosby">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Mosby翻译(二) : 入门">
+<meta property="og:url" content="http://yoursite.com/2017/12/20/Mosby翻译-二-入门/index.html">
+<meta property="og:site_name" content="adaJQD的博客">
+<meta property="og:description" content="英文原文 这里有一些如何使用Mosby来建立一个基于MVP的架构的简单的例子。我们假设你已经知道“MVP - passive view”，如果不是，你应该考虑阅读MVP部分 : MVP原理/)，以便在继续之前了解MVP的基本知识。 Hello MVP World在这个非常简单的例子中，我们假设view要显示一个TextView，这个TextView显示“Hello”和一个随机数字，或者“Goodb">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2017-12-20T05:33:18.837Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Mosby翻译(二) : 入门">
+<meta name="twitter:description" content="英文原文 这里有一些如何使用Mosby来建立一个基于MVP的架构的简单的例子。我们假设你已经知道“MVP - passive view”，如果不是，你应该考虑阅读MVP部分 : MVP原理/)，以便在继续之前了解MVP的基本知识。 Hello MVP World在这个非常简单的例子中，我们假设view要显示一个TextView，这个TextView显示“Hello”和一个随机数字，或者“Goodb">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.3',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/12/20/Mosby翻译-二-入门/"/>
+
+
+
+
+
+  <title>Mosby翻译(二) : 入门 | adaJQD的博客</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?a22ce718cdbf28822bc67e6a8dcf181d";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">adaJQD的博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/12/20/Mosby翻译-二-入门/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="adaJQD">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="adaJQD的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Mosby翻译(二) : 入门</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-12-20T13:28:34+08:00">
+                2017-12-20
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Mosby翻译/" itemprop="url" rel="index">
+                    <span itemprop="name">Mosby翻译</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p><a href="http://hannesdorfmann.com/mosby/getting-started/" target="_blank" rel="noopener">英文原文</a></p>
+<p>这里有一些如何使用Mosby来建立一个基于MVP的架构的简单的例子。我们假设你已经知道“MVP - passive view”，如果不是，你应该考虑阅读<a href="https://adajqd.github.io/2017/12/20/Mosby翻译(三" target="_blank" rel="noopener">MVP部分</a> : MVP原理/)，以便在继续之前了解MVP的基本知识。</p>
+<h2 id="Hello-MVP-World"><a href="#Hello-MVP-World" class="headerlink" title="Hello MVP World"></a>Hello MVP World</h2><p>在这个非常简单的例子中，我们假设view要显示一个TextView，这个TextView显示“Hello”和一个随机数字，或者“Goodbye”和一个随机数字。如果显示“Hello”，则文字颜色将变为红色，如果是“Goodbye”则将以蓝色文字显示。生成问候文本是在一个<code>AsyncTask</code>里完成的，我们假设生成问候文本（随机数计算并连接在问候文本的结尾）是耗CPU的，并且需要2秒。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">// &quot;Business logic&quot; component</span><br><span class="line">class GreetingGeneratorTask extends AsyncTask&lt;Void, Void, Integer&gt; &#123;</span><br><span class="line"></span><br><span class="line">  // Callback - Listener</span><br><span class="line">  public interface GreetingTaskListener&#123;</span><br><span class="line">    public void onGreetingGenerated(String greetingText);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  private String baseText;</span><br><span class="line">  private GreetingTaskListener listener;</span><br><span class="line"></span><br><span class="line">  public GreetingGeneratorTask(String baseText, GreetingTaskListener listener)&#123;</span><br><span class="line">    this.baseText = baseText;</span><br><span class="line">    this.listener = listener;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  // Simulates computing and returns a random integer</span><br><span class="line">  @Override</span><br><span class="line">  protected Integer doInBackground(Void... params) &#123;</span><br><span class="line">    try &#123;</span><br><span class="line">      Thread.sleep(2000); // Simulate computing</span><br><span class="line">    &#125; catch (InterruptedException e) &#123; &#125;</span><br><span class="line"></span><br><span class="line">    return (int) (Math.random() * 100);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  @Override</span><br><span class="line">  protected void onPostExecute(Integer randomInt)&#123;</span><br><span class="line">    listener.onGreetingGenerated(baseText + &quot; &quot;+randomInt);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">// View interface</span><br><span class="line">interface HelloWorldView extends MvpView &#123;</span><br><span class="line"></span><br><span class="line">  // displays &quot;Hello&quot; greeting text in red text color</span><br><span class="line">  void showHello(String greetingText);</span><br><span class="line"></span><br><span class="line">  // displays &quot;Goodbye&quot; greeting text in blue text color</span><br><span class="line">  void showGoodbye(String greetingText);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">// The presenter that coordinates HelloWorldView and business logic (GreetingGeneratorTask)</span><br><span class="line">class HelloWorldPresenter extends MvpBasePresenter&lt;HelloWorldView&gt; &#123;</span><br><span class="line"></span><br><span class="line">  // Greeting Task is &quot;business logic&quot;</span><br><span class="line">  private GreetingGeneratorTask greetingTask;</span><br><span class="line"></span><br><span class="line">  private void cancelGreetingTaskIfRunning()&#123;</span><br><span class="line">    if (greetingTask != null)&#123;</span><br><span class="line">      greetingTask.cancel(true);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  public void greetHello()&#123;</span><br><span class="line">    cancelGreetingTaskIfRunning();</span><br><span class="line"></span><br><span class="line">    greetingTask = new GreetingGeneratorTask(&quot;Hello&quot;, new GreetingTaskListener()&#123;</span><br><span class="line">      public void onGreetingGenerated(String greetingText)&#123;</span><br><span class="line">        if (isViewAttached())</span><br><span class="line">          getView().showHello(greetingText);</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;);</span><br><span class="line">    greetingTask.execute();</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  public void greetGoodbye()&#123;</span><br><span class="line">    cancelGreetingTaskIfRunning();</span><br><span class="line"></span><br><span class="line">    greetingTask = new GreetingGeneratorTask(&quot;Goodbye&quot;, new GreetingTaskListener()&#123;</span><br><span class="line">      public void onGreetingGenerated(String greetingText)&#123;</span><br><span class="line">        if (isViewAttached())</span><br><span class="line">          getView().showGoodbye(greetingText);</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;);</span><br><span class="line">    greetingTask.execute();</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">  // Called when Activity gets destroyed, so cancel running background task</span><br><span class="line">  public void detachView(boolean retainPresenterInstance)&#123;</span><br><span class="line">    super.detachView(retainPresenterInstance);</span><br><span class="line">    if (!retainPresenterInstance)&#123;</span><br><span class="line">        cancelGreetingTaskIfRunning();</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line">public class HelloWorldActivity extends MvpActivity&lt;HelloWorldView, HelloWorldPresenter&gt;</span><br><span class="line">                                implements HelloWorldView &#123;</span><br><span class="line"></span><br><span class="line">  @Bind(R.id.greetingTextView) TextView greetingTextView;</span><br><span class="line"></span><br><span class="line">  @Override</span><br><span class="line">  protected void onCreate(Bundle savedState)&#123;</span><br><span class="line">    super.onCreate(savedState);</span><br><span class="line">    setContentView(R.layout.activity_helloworld);</span><br><span class="line">    Butterknife.bind(this);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  @Override // Called internally by Mosby</span><br><span class="line">  public HelloWorldPresenter createPresenter()&#123;</span><br><span class="line">    return new HelloWorldPresenter();</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  @OnClick(R.id.helloButton)</span><br><span class="line">  public void onHelloButtonClicked()&#123;</span><br><span class="line">    presenter.greetHello();</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  @OnClick(R.id.goodbyeButtonClicked)</span><br><span class="line">  public void onGoodbyeButtonClicked()&#123;</span><br><span class="line">    presenter.greetGoodbye();</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  @Override</span><br><span class="line">  public void showHello(String greetingText)&#123;</span><br><span class="line">    greetingTextView.setTextColor(Color.RED);</span><br><span class="line">    greetingTextView.setText(greetingText);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  @Override</span><br><span class="line">  public void showGoodbye(String greetingText)&#123;</span><br><span class="line">    greetingTextView.setTextColor(Color.BLUE);</span><br><span class="line">    greetingTextView.setText(greetingText);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>正如你在<code>HelloWorldActivity</code>中所看到的，只包含与UI组件相关的代码。没有业务逻辑，没有1000多行乱七八糟代码的Activity。通过View（HelloWorldActivity），Presenter（HelloWorldPresenter）和业务逻辑（GreetingGeneratorTask）之间的明确分离，您可以编写可维护，松耦合和可测试的代码。<strong>这就是MVP的全部内容</strong>。</p>
+<h2 id="LCE例子"><a href="#LCE例子" class="headerlink" title="LCE例子"></a>LCE例子</h2><p>下面这个例子稍微复杂一些，更接近真实世界的应用程序。假设我们想要在<code>RecyclerView</code>中显示一个国家列表。国家列表从Web服务（异步）加载，并且需要几秒钟。我们将使用<code>Retrofit</code>作为http库。加载时我们要显示一个<code>ProgressBar</code>。如果发生错误，我们希望显示错误消息。此外，我们要使用一个<code>SwipeRefreshLayout</code>，使用户可以刷新国家列表。我们把这类View叫做<code>LCE-View</code>（Loading-Content-Error），因为View有三种状态：显示加载，显示内容和显示错误视图。Mosby为这样的Views提供了一个模板：<code>MvpLceActivity</code>和<code>MvpLceFragment</code>。这些模板的基类中会处理更改视图状态的操作（使用淡入淡出的动画）。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">// Business logic: We use Retrofit to load a list of Countries from a web service</span><br><span class="line">interface CountriesApi &#123;</span><br><span class="line"></span><br><span class="line">  @GET(&quot;/countries&quot;)</span><br><span class="line">  void getCountries(Callback&lt;List&lt;Country&gt;&gt; callback);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">// View interface</span><br><span class="line">interface CountriesView extends MvpLceView&lt;List&lt;Country&gt;&gt; &#123;</span><br><span class="line">  // MvpLceView already defines LCE methods:</span><br><span class="line">  //</span><br><span class="line">  // void showLoading(boolean pullToRefresh)</span><br><span class="line">  // void showError(Throwable t, boolean pullToRefresh)</span><br><span class="line">  // void setData(List&lt;Country&gt; data)</span><br><span class="line">  // void showContent()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">class CountriesPresenter extends MvpBasePresenter&lt;CountriesView&gt; &#123;</span><br><span class="line"></span><br><span class="line">  private CountriesApi api;</span><br><span class="line"></span><br><span class="line">  public void loadCountries(final boolean pullToRefresh)&#123;</span><br><span class="line"></span><br><span class="line">    api.getCountries(new Callback&lt;List&lt;Country&gt;&gt;()&#123;</span><br><span class="line">      @Override</span><br><span class="line">      public void success(List&lt;Country&gt; countries, Response response) &#123;</span><br><span class="line">        if (isViewAttached())&#123;</span><br><span class="line">          getView().setData(countries);</span><br><span class="line">          getView().showContent();</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line"></span><br><span class="line">      @Override</span><br><span class="line">      public void failure(RetrofitError retrofitError) &#123;</span><br><span class="line">        if(isViewAttached())</span><br><span class="line">          getView().showError(retrofitError.getCause(), pullToRefresh);</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br></pre></td><td class="code"><pre><span class="line">public class CountriesFragment</span><br><span class="line">    extends MvpLceFragment&lt;SwipeRefreshLayout, List&lt;Country&gt;, CountriesView, CountriesPresenter&gt;</span><br><span class="line">    implements CountriesView, SwipeRefreshLayout.OnRefreshListener &#123;</span><br><span class="line"></span><br><span class="line">  @Bind(R.id.recyclerView) RecyclerView recyclerView;</span><br><span class="line">  CountriesAdapter adapter;</span><br><span class="line"></span><br><span class="line">  @Override</span><br><span class="line">  public View onCreateView(LayoutInflater inflater, ViewGroup container,</span><br><span class="line">      Bundle savedInstanceState) &#123;</span><br><span class="line">    return inflater.inflate(R.layout.fragment_countries, container, false);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  @Override public void onViewCreated(View view, Bundle savedInstance) &#123;</span><br><span class="line">    super.onViewCreated(view, savedInstance);</span><br><span class="line">    ButterKnife.bind(this, view);</span><br><span class="line">    // contentView is SwipeRefreshLayout</span><br><span class="line">    contentView.setOnRefreshListener(this);</span><br><span class="line"></span><br><span class="line">    // Setup recycler view</span><br><span class="line">    adapter = new CountriesAdapter(getActivity());</span><br><span class="line">    recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));</span><br><span class="line">    recyclerView.setAdapter(adapter);</span><br><span class="line">    loadData(false);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  @Override public void loadData(boolean pullToRefresh) &#123;</span><br><span class="line">    presenter.loadCountries(pullToRefresh);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  @Override public void onRefresh() &#123;</span><br><span class="line">    loadData(true);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  @Override public CountriesPresenter createPresenter() &#123;</span><br><span class="line">    return new CountriesPresenter();</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  @Override public void setData(List&lt;Country&gt; data) &#123;</span><br><span class="line">    adapter.setCountries(data);</span><br><span class="line">    adapter.notifyDataSetChanged();</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  @Override public void showContent() &#123;</span><br><span class="line">    super.showContent();</span><br><span class="line">    contentView.setRefreshing(false);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  @Override public void showError(Throwable e, boolean pullToRefresh) &#123;</span><br><span class="line">    super.showError(e, pullToRefresh);</span><br><span class="line">    contentView.setRefreshing(false);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  @Override public void showLoading(boolean pullToRefresh) &#123;</span><br><span class="line">    super.showLoading(pullToRefresh);</span><br><span class="line">    contentView.setRefreshing(pullToRefresh);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="LCE-ViewState示例"><a href="#LCE-ViewState示例" class="headerlink" title="LCE ViewState示例"></a>LCE ViewState示例</h2><p>在之前的LCE示例中如果用户旋转屏幕，会发生什么？一个新的Fragment被创建，再次显示ProgressBar，即使在屏幕方向改变之前，我们已经显示了数据（国家列表）。Mosby提供了一个称为<code>ViewState</code>的功能来处理屏幕方向的变化。查看<a href="http://hannesdorfmann.com/mosby/viewstate/" target="_blank" rel="noopener">ViewState部分</a>来查看更多和其工作原理。在这个“入门”部分，我们只是想展示如何将ViewState支持添加到之前的LCE示例，以便您的应用程序仍然处于屏幕方向更改之前的状态，即在竖屏时显示国家列表，在横屏时仍然显示国家列表。我们所要做的就是继承<code>MvpLceViewStateFragment</code>而不是<code>MvpLceFragment</code>，并且实现<code>createViewState()</code>和<code>getData()</code>：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">public class CountriesFragment</span><br><span class="line">    extends MvpLceViewStateFragment&lt;SwipeRefreshLayout, List&lt;Country&gt;, CountriesView, CountriesPresenter&gt;</span><br><span class="line">    implements CountriesView, SwipeRefreshLayout.OnRefreshListener &#123;</span><br><span class="line"></span><br><span class="line">  @Bind(R.id.recyclerView) RecyclerView recyclerView;</span><br><span class="line">  CountriesAdapter adapter;</span><br><span class="line"></span><br><span class="line">  @Override</span><br><span class="line">  public void onCreate(Bundle savedState)&#123;</span><br><span class="line">    super.onCreate(savedState);</span><br><span class="line">    setRetainInstance(true); // Enable retaining presenter / viewstate</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  @Override public LceViewState&lt;List&lt;Country&gt;, CountriesView&gt; createViewState() &#123;</span><br><span class="line">    return new RetainingLceViewState&lt;List&lt;Country&gt;, CountriesView&gt;();</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  @Override public List&lt;Country&gt; getData() &#123;</span><br><span class="line">    return adapter == null ? null : adapter.getCountries();</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  ...</span><br><span class="line">  // Everything else remains the same as shown in the previous LCE example</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>请注意，Activities和ViewGroup也支持ViewState功能。</p>
+<h2 id="Kotlin示例"><a href="#Kotlin示例" class="headerlink" title="Kotlin示例"></a>Kotlin示例</h2><p>Kotlin是Android开发中的新希望。从Mosby 2.0开始支持Kotlin。在这个例子中，我们将展示一个非常基本的LCE示例，在这个例子中，我们生成（异步）超级英雄列表，并将其显示在RecyclerView中。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line">// Business logic: AsyncTask generates list of heroes and invokes successful lambda or error lambda as &quot;callback&quot;</span><br><span class="line">public class AsyncHeroesTask(val pullToRefresh: Boolean,</span><br><span class="line">                             val successful: (List&lt;Hero&gt;, Boolean) -&gt; Unit,</span><br><span class="line">                             val error: (Exception, Boolean) -&gt; Unit) : AsyncTask&lt;Void, Void, List&lt;Hero&gt;&gt;() &#123;</span><br><span class="line"></span><br><span class="line">    // Simple static counter since we simulate errors on every second request</span><br><span class="line">    companion object Counter &#123;</span><br><span class="line">        var requestCounter: Int = 0</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    override fun doInBackground(vararg params: Void?): List&lt;Hero&gt;? &#123;</span><br><span class="line"></span><br><span class="line">        Thread.sleep(2000) // Simulate network delay</span><br><span class="line"></span><br><span class="line">        requestCounter++</span><br><span class="line"></span><br><span class="line">        // Simulate network error every second request --&gt; returning null means error</span><br><span class="line">        if (requestCounter % 2 != 0) return null;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        var heroes = arrayListOf(</span><br><span class="line">                Hero(&quot;Batwoman&quot;, &quot;https://upload.wikimedia.org/wikipedia/en/2/24/Batwoman.png&quot;),</span><br><span class="line">                Hero(&quot;Spider-Man&quot;,&quot;http://oyster.ignimgs.com/wordpress/stg.ign.com/2014/09/1j-720x1091.jpg&quot;),</span><br><span class="line">                ...</span><br><span class="line">        )</span><br><span class="line"></span><br><span class="line">        Collections.shuffle(heroes)</span><br><span class="line"></span><br><span class="line">        return heroes;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    override fun onPostExecute(heroes: List&lt;Hero&gt;?) &#123;</span><br><span class="line">        when (heroes) &#123;</span><br><span class="line">            null -&gt; error(Exception(), pullToRefresh)</span><br><span class="line">            else -&gt; successful(heroes, pullToRefresh)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">interface HeroesView : MvpLceView&lt;List&lt;Hero&gt;&gt; &#123;</span><br><span class="line">  // LCE methods inherited</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line">public class HeroesPresenter : MvpBasePresenter&lt;HeroesView&gt; () &#123;</span><br><span class="line"></span><br><span class="line">    private var loaderTask: AsyncHeroesTask ? = null</span><br><span class="line"></span><br><span class="line">    fun loadHeroes(pullToRefresh: Boolean) &#123;</span><br><span class="line"></span><br><span class="line">        cancelIfRunning();</span><br><span class="line"></span><br><span class="line">        // Show Loading</span><br><span class="line">        view?.showLoading(pullToRefresh)</span><br><span class="line"></span><br><span class="line">        // execute loading</span><br><span class="line">        loaderTask = AsyncHeroesTask(</span><br><span class="line">                pullToRefresh,</span><br><span class="line">                &#123; heroes, pullToRefresh -&gt;  // successful lambda / callback</span><br><span class="line">                    view?.setData(heroes) // no isViewAttached() check needed because kotlin offers null safety as language feature</span><br><span class="line">                    view?.showContent()</span><br><span class="line">                &#125;,</span><br><span class="line">                &#123; exception, pullToRefresh -&gt;  // error lambda / callback</span><br><span class="line">                    view?.showError(exception, pullToRefresh)</span><br><span class="line">                &#125;</span><br><span class="line">        )</span><br><span class="line"></span><br><span class="line">        loaderTask?.execute()</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    fun cancelIfRunning() &#123;</span><br><span class="line"></span><br><span class="line">        // Cancel any previous one</span><br><span class="line">        loaderTask?.cancel(true);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    override fun detachView(retainInstance: Boolean) &#123;</span><br><span class="line">        super.detachView(retainInstance)</span><br><span class="line"></span><br><span class="line">        // Keep async tasks running if retaining, otherwise cancel</span><br><span class="line">        if (!retainInstance) &#123;</span><br><span class="line">            cancelIfRunning()</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><span class="line">public class HeroesActivity : HeroesView, MvpLceViewStateActivity&lt;SwipeRefreshLayout, List&lt;Hero&gt;, HeroesView, HeroesPresenter&gt;(), SwipeRefreshLayout.OnRefreshListener &#123;</span><br><span class="line"></span><br><span class="line">    var adapter: HeroesAdapter? = null</span><br><span class="line"></span><br><span class="line">    override fun onCreate(savedInstanceState: Bundle?) &#123;</span><br><span class="line">        super.onCreate(savedInstanceState)</span><br><span class="line">        setContentView(R.layout.activity_heroes)</span><br><span class="line">        retainInstance = true</span><br><span class="line">        contentView.setOnRefreshListener(this)</span><br><span class="line"></span><br><span class="line">        val recyclerView = findViewById(R.id.recyclerView) as RecyclerView</span><br><span class="line"></span><br><span class="line">        adapter = HeroesAdapter(this, LayoutInflater.from(this))</span><br><span class="line">        recyclerView.adapter = adapter</span><br><span class="line">        recyclerView.layoutManager = GridLayoutManager(this, 2)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    override fun createPresenter(): HeroesPresenter &#123;</span><br><span class="line">        return HeroesPresenter()</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    override fun createViewState(): LceViewState&lt;List&lt;Hero&gt;, HeroesView&gt; &#123;</span><br><span class="line">        return RetainingLceViewState()</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    override fun setData(data: List&lt;Hero&gt;?) &#123;</span><br><span class="line">        adapter?.items = data</span><br><span class="line">        adapter?.notifyDataSetChanged()</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    override fun loadData(pullToRefresh: Boolean) &#123;</span><br><span class="line">        presenter.loadHeroes(pullToRefresh)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    override fun onRefresh() &#123;</span><br><span class="line">        loadData(true)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    override fun showContent() &#123;</span><br><span class="line">        super.showContent()</span><br><span class="line">        contentView.isRefreshing = false</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    override fun showError(t: Throwable, pullToRefresh: Boolean) &#123;</span><br><span class="line">        super.showError(t, pullToRefresh)</span><br><span class="line">        contentView.isRefreshing = false</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    override fun showLoading(pullToRefresh: Boolean) &#123;</span><br><span class="line">        super.showLoading(pullToRefresh)</span><br><span class="line">        contentView.isRefreshing = pullToRefresh</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Mosby/" rel="tag"># Mosby</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/12/20/Mosby翻译-一-简介-用于android的MVP库/" rel="next" title="Mosby翻译(一) : 简介-用于android的MVP库">
+                <i class="fa fa-chevron-left"></i> Mosby翻译(一) : 简介-用于android的MVP库
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/12/20/Mosby翻译-三-MVP原理/" rel="prev" title="Mosby翻译(三) : MVP原理">
+                Mosby翻译(三) : MVP原理 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">adaJQD</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">3</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                
+                  <span class="site-state-item-count">1</span>
+                  <span class="site-state-item-name">分类</span>
+                
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">1</span>
+                  <span class="site-state-item-name">标签</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          <div class="links-of-author motion-element">
+            
+          </div>
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Hello-MVP-World"><span class="nav-number">1.</span> <span class="nav-text"><a href="#Hello-MVP-World" class="headerlink" title="Hello MVP World"></a>Hello MVP World</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#LCE例子"><span class="nav-number">2.</span> <span class="nav-text"><a href="#LCE&#x4F8B;&#x5B50;" class="headerlink" title="LCE&#x4F8B;&#x5B50;"></a>LCE&#x4F8B;&#x5B50;</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#LCE-ViewState示例"><span class="nav-number">3.</span> <span class="nav-text"><a href="#LCE-ViewState&#x793A;&#x4F8B;" class="headerlink" title="LCE ViewState&#x793A;&#x4F8B;"></a>LCE ViewState&#x793A;&#x4F8B;</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Kotlin示例"><span class="nav-number">4.</span> <span class="nav-text"><a href="#Kotlin&#x793A;&#x4F8B;" class="headerlink" title="Kotlin&#x793A;&#x4F8B;"></a>Kotlin&#x793A;&#x4F8B;</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">adaJQD</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.3</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.3"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.3"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.3"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.3"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.3"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.3"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.3"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
