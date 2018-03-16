@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+
+
+    
+  <url>
+    <loc>https://adajqd.github.io/2017/12/20/mosby-mvp/</loc>
+    <lastmod>2017-12-30T06:59:40.912Z</lastmod>
+    <data>
+        <display>
+        <title>Mosby翻译(三) : MVP原理</title>
+        <pubTime>2017-12-20T05:31:38.000Z</pubTime>
+        
+        <tag>Mosby</tag>
+         
+         
+           
+             
+              <breadCrumb title="Mosby翻译" url="https://adajqd.github.io/categories/Mosby%E7%BF%BB%E8%AF%91/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>https://adajqd.github.io/2017/12/20/mosby-getting-started/</loc>
+    <lastmod>2017-12-20T07:45:11.000Z</lastmod>
+    <data>
+        <display>
+        <title>Mosby翻译(二) : 入门</title>
+        <pubTime>2017-12-20T05:28:34.000Z</pubTime>
+        
+        <tag>Mosby</tag>
+         
+         
+           
+             
+              <breadCrumb title="Mosby翻译" url="https://adajqd.github.io/categories/Mosby%E7%BF%BB%E8%AF%91/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>https://adajqd.github.io/2017/12/20/mosby-brief/</loc>
+    <lastmod>2017-12-20T07:44:54.000Z</lastmod>
+    <data>
+        <display>
+        <title>Mosby翻译(一) : 简介-用于android的MVP库</title>
+        <pubTime>2017-12-20T03:18:08.000Z</pubTime>
+        
+        <tag>Mosby</tag>
+         
+         
+           
+             
+              <breadCrumb title="Mosby翻译" url="https://adajqd.github.io/categories/Mosby%E7%BF%BB%E8%AF%91/"/>
+          
+        </display>
+    </data>
+    </url>
+
+</urlset>
