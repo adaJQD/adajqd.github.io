@@ -1,0 +1,985 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.3" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png?v=5.1.3">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png?v=5.1.3">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png?v=5.1.3">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.3" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="AudioRecord,AudioTrack,pcm,wav,," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="在 Android 平台使用 AudioRecord 和 AudioTrack API 完成音频 PCM 数据的采集和播放，并实现读写音频 wav 文件。 音频基础知识声道数（通道数）即声音的通道的数目。很好理解，有单声道和立体声之分，单声道的声音只能使用一个喇叭发声（有的也处理成两个喇叭输出同一个声道的声音），立体声的PCM可以使两个喇叭都发声（一般左右声道有分工） ，更能感受到空间效果。 采样">
+<meta name="keywords" content="AudioRecord,AudioTrack,pcm,wav,">
+<meta property="og:type" content="article">
+<meta property="og:title" content="音频PCM数据的采集和播放">
+<meta property="og:url" content="https://adajqd.github.io/2018/03/20/2018-3-20-音频-PCM-数据的采集和播放/index.html">
+<meta property="og:site_name" content="adaJQD的博客">
+<meta property="og:description" content="在 Android 平台使用 AudioRecord 和 AudioTrack API 完成音频 PCM 数据的采集和播放，并实现读写音频 wav 文件。 音频基础知识声道数（通道数）即声音的通道的数目。很好理解，有单声道和立体声之分，单声道的声音只能使用一个喇叭发声（有的也处理成两个喇叭输出同一个声道的声音），立体声的PCM可以使两个喇叭都发声（一般左右声道有分工） ，更能感受到空间效果。 采样">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://upload.wikimedia.org/wikipedia/commons/8/8c/Wave_format.png">
+<meta property="og:updated_time" content="2018-03-20T15:11:38.550Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="音频PCM数据的采集和播放">
+<meta name="twitter:description" content="在 Android 平台使用 AudioRecord 和 AudioTrack API 完成音频 PCM 数据的采集和播放，并实现读写音频 wav 文件。 音频基础知识声道数（通道数）即声音的通道的数目。很好理解，有单声道和立体声之分，单声道的声音只能使用一个喇叭发声（有的也处理成两个喇叭输出同一个声道的声音），立体声的PCM可以使两个喇叭都发声（一般左右声道有分工） ，更能感受到空间效果。 采样">
+<meta name="twitter:image" content="https://upload.wikimedia.org/wikipedia/commons/8/8c/Wave_format.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.3',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://adajqd.github.io/2018/03/20/2018-3-20-音频-PCM-数据的采集和播放/"/>
+
+
+
+
+
+  <title>音频PCM数据的采集和播放 | adaJQD的博客</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?a22ce718cdbf28822bc67e6a8dcf181d";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">adaJQD的博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://adajqd.github.io/2018/03/20/2018-3-20-音频-PCM-数据的采集和播放/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="adaJQD">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="adaJQD的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">音频PCM数据的采集和播放</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-03-20T23:10:38+08:00">
+                2018-03-20
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/音视频/" itemprop="url" rel="index">
+                    <span itemprop="name">音视频</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2018/03/20/2018-3-20-音频-PCM-数据的采集和播放/" class="leancloud_visitors" data-flag-title="音频PCM数据的采集和播放">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>在 Android 平台使用 AudioRecord 和 AudioTrack API 完成音频 PCM 数据的采集和播放，并实现读写音频 wav 文件。</p>
+<h2 id="音频基础知识"><a href="#音频基础知识" class="headerlink" title="音频基础知识"></a>音频基础知识</h2><h3 id="声道数（通道数）"><a href="#声道数（通道数）" class="headerlink" title="声道数（通道数）"></a>声道数（通道数）</h3><p>即<strong>声音的通道的数目</strong>。很好理解，有单声道和立体声之分，单声道的声音只能使用一个喇叭发声（有的也处理成两个喇叭输出同一个声道的声音），立体声的PCM可以使两个喇叭都发声（一般左右声道有分工） ，更能感受到空间效果。</p>
+<h3 id="采样位数"><a href="#采样位数" class="headerlink" title="采样位数"></a>采样位数</h3><p>即 <strong>采样值</strong>或取样值（就是将采样样本幅度量化）。它是用来衡量声音波动变化的一个参数，也可以说是声卡的分辨率。它的数值越大，分辨率也就越高，所发出声音的能力越强。</p>
+<p>在计算机中采样位数一般有8位和16位之分，但有一点请大家注意，8位不是说把纵坐标分成8份，而是分成2的8次方即256份； 同理16位是把纵坐标分成2的16次方65536份。</p>
+<h3 id="采样频率"><a href="#采样频率" class="headerlink" title="采样频率"></a>采样频率</h3><p>即取样频率，指 <strong>每秒钟取得声音样本的次数</strong>。采样频率越高，声音的质量也就越好，声音的还原也就越真实，但同时它占的资源比较多。由于人耳的分辨率很有限，太高的频率并不能分辨出来。在16位声卡中有22KHz、44KHz等几级，其中，22KHz相当于普通FM广播的音质，44KHz已相当于CD音质了，目前的常用采样频率都不超过48KHz。</p>
+<p>既然知道了以上三个概念，就可以由下边的公式得出PCM文件所占容量：</p>
+<p><code>存储量= (采样频率 * 采样位数 * 声道 * 时间)／8 (单位：字节数)。</code></p>
+<h2 id="PCM-介绍"><a href="#PCM-介绍" class="headerlink" title="PCM 介绍"></a>PCM 介绍</h2><p>目前我们在计算机上进行音频播放都需要依赖于音频文件，音频文件的生成过程是将声音信息采样、量化和编码产生的数字信号的过程，人耳所能听到的声音，最低的频率是从20Hz起一直到最高频率20KHZ，因此音频文件格式的最大带宽是20KHZ。根据奈奎斯特的理论，只有采样频率高于声音信号最高频率的两倍时，才能把数字信号表示的声音还原成为原来的声音，所以音频文件的采样率一般在40~50KHZ，比如最常见的CD音质采样率44.1KHZ。</p>
+<p>对声音进行采样、量化过程被称为脉冲编码调制（Pulse Code Modulation），简称PCM。<strong>PCM数据是最原始的音频数据完全无损</strong>，所以PCM数据虽然音质优秀但体积庞大，为了解决这个问题先后诞生了一系列的音频格式，这些音频格式运用不同的方法对音频数据进行压缩，其中有无损压缩（ALAC、APE、FLAC）和有损压缩（MP3、AAC、OGG、WMA）两种。</p>
+<h2 id="WAV"><a href="#WAV" class="headerlink" title="WAV"></a>WAV</h2><p>Waveform Audio File Format（WAVE，又或者是因为扩展名而被大众所知的WAV），是微软与IBM公司所开发在个人电脑存储音频流的编码格式，在Windows平台的应用软件受到广泛的支持，地位上类似于麦金塔电脑里的AIFF。 此格式属于资源交换档案格式(RIFF)的应用之一，通常会将采用脉冲编码调制的音频资存储在区块中。也是其音乐发烧友中常用的指定规格之一。由于此音频格式未经过压缩，所以在音质方面不会出现失真的情况，但档案的体积因而在众多音频格式中较为大。</p>
+<p>所有的WAV都有一个文件头，这个文件头音频流的编码参数。WAV对音频流的编码没有硬性规定，除了PCM之外，还有几乎所有支持ACM规范的编码都可以为WAV的音频流进行编码。WAV也可以使用多种音频编码来压缩其音频流，不过我们常见的都是音频流被PCM编码处理的WAV，但这不表示WAV只能使用PCM编码，MP3编码同样也可以运用在WAV中，和AVI一样，只要安装好了相应的Decode，就可以欣赏这些WAV了。</p>
+<p>在Windows平台下，基于PCM编码的WAV是被支持得最好的音频格式，所有音频软件都能完美支持，由于本身可以达到较高的音质的要求，因此，WAV也是音乐编辑创作的首选格式，适合保存音乐素材。因此，基于PCM编码的WAV被作为了一种中介的格式，常常使用在其他编码的相互转换之中，例如MP3转换成WMA。</p>
+<h3 id="wav文件格式"><a href="#wav文件格式" class="headerlink" title="wav文件格式"></a>wav文件格式</h3><p>在文件的前44字节放置标头(header)，使播放器或编辑器能够简单掌握文件的基本信息，其内容以区块(chunk)为最小单位，每一区块长度为4字节。</p>
+<p><img src="https://upload.wikimedia.org/wikipedia/commons/8/8c/Wave_format.png" alt=""></p>
+<p><a href="https://zh.wikipedia.org/wiki/WAV" target="_blank" rel="noopener">摘自维基百科</a></p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">起始位址</th>
+<th style="text-align:left">区块名称</th>
+<th style="text-align:left">区块大小</th>
+<th>端序</th>
+<th>区块内容</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">0</td>
+<td style="text-align:left">区块编号</td>
+<td style="text-align:left">4</td>
+<td>大</td>
+<td>“RIFF”</td>
+</tr>
+<tr>
+<td style="text-align:left">4</td>
+<td style="text-align:left">总区块大小</td>
+<td style="text-align:left">4</td>
+<td>小</td>
+<td>= N+36</td>
+<td>N：音频数据的总字节数；36：从下一个地址开始到头文件尾的总字节数</td>
+</tr>
+<tr>
+<td style="text-align:left">8</td>
+<td style="text-align:left">档案格式</td>
+<td style="text-align:left">4</td>
+<td>大</td>
+<td>“WAVE”</td>
+</tr>
+<tr>
+<td style="text-align:left">12</td>
+<td style="text-align:left">子区块1标识</td>
+<td style="text-align:left">4</td>
+<td>大</td>
+<td>“fmt ”    （最后有一个空格）</td>
+</tr>
+<tr>
+<td style="text-align:left">16</td>
+<td style="text-align:left">子区块1大小</td>
+<td style="text-align:left">4</td>
+<td>小</td>
+<td>16</td>
+</tr>
+<tr>
+<td style="text-align:left">20</td>
+<td style="text-align:left">音频格式</td>
+<td style="text-align:left">2</td>
+<td>小</td>
+<td>1（PCM）</td>
+</tr>
+<tr>
+<td style="text-align:left">22</td>
+<td style="text-align:left">声道数量</td>
+<td style="text-align:left">2</td>
+<td>小</td>
+<td>1（单声道）2（立体声）</td>
+</tr>
+<tr>
+<td style="text-align:left">24</td>
+<td style="text-align:left">取样频率（采用频率）</td>
+<td style="text-align:left">4</td>
+<td>小</td>
+<td>取样点/秒（Hz）</td>
+</tr>
+<tr>
+<td style="text-align:left">28</td>
+<td style="text-align:left">位元（组）率</td>
+<td style="text-align:left">4</td>
+<td>小</td>
+<td>= 取样频率 * 位元深度 / 8</td>
+<td>Byte率 = 采样频率 <em> 音频通道数 </em> 每次采样得到的样本位数 / 8</td>
+</tr>
+<tr>
+<td style="text-align:left">32</td>
+<td style="text-align:left">区块对齐</td>
+<td style="text-align:left">2</td>
+<td>小</td>
+<td>4</td>
+</tr>
+<tr>
+<td style="text-align:left">36</td>
+<td style="text-align:left">子区块2标识</td>
+<td style="text-align:left">4</td>
+<td>大</td>
+<td>“data”</td>
+</tr>
+<tr>
+<td style="text-align:left">40</td>
+<td style="text-align:left">子区块2大小</td>
+<td style="text-align:left">4</td>
+<td>小</td>
+<td>N（=位元(组) <em> 秒数 </em> 声道数量）</td>
+<td>音频数据的大小</td>
+</tr>
+<tr>
+<td style="text-align:left">44</td>
+<td style="text-align:left">音频数据</td>
+<td style="text-align:left">=N</td>
+<td>小</td>
+<td>&lt;音频数据从此开始&gt;</td>
+</tr>
+</tbody>
+</table>
+<p><a href="https://zh.wikipedia.org/wiki/%E5%AD%97%E8%8A%82%E5%BA%8F" target="_blank" rel="noopener">端序，即字节顺序</a></p>
+<p><strong>代码实现</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 音频数据的大小</span></span><br><span class="line"><span class="keyword">long</span> totalAudioLen = fileInputStream.getChannel().size();</span><br><span class="line"><span class="comment">// wav总区块大小</span></span><br><span class="line"><span class="keyword">long</span> totalDataLen = totalAudioLen + <span class="number">36</span>;</span><br><span class="line"><span class="comment">// 声道数量</span></span><br><span class="line"><span class="keyword">int</span> channels;</span><br><span class="line"><span class="comment">// 采样率</span></span><br><span class="line"><span class="keyword">long</span> longSampleRate;</span><br><span class="line"><span class="comment">// 位元率</span></span><br><span class="line"><span class="keyword">long</span> byteRate = <span class="number">16</span> * longSampleRate * channels / <span class="number">8</span>;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">byte</span>[] header = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">44</span>];</span><br><span class="line">        <span class="comment">// RIFF/WAVE header</span></span><br><span class="line">        header[<span class="number">0</span>] = <span class="string">'R'</span>;</span><br><span class="line">        header[<span class="number">1</span>] = <span class="string">'I'</span>;</span><br><span class="line">        header[<span class="number">2</span>] = <span class="string">'F'</span>;</span><br><span class="line">        header[<span class="number">3</span>] = <span class="string">'F'</span>;</span><br><span class="line">        header[<span class="number">4</span>] = (<span class="keyword">byte</span>) (totalDataLen &amp; <span class="number">0xff</span>);</span><br><span class="line">        header[<span class="number">5</span>] = (<span class="keyword">byte</span>) ((totalDataLen &gt;&gt; <span class="number">8</span>) &amp; <span class="number">0xff</span>);</span><br><span class="line">        header[<span class="number">6</span>] = (<span class="keyword">byte</span>) ((totalDataLen &gt;&gt; <span class="number">16</span>) &amp; <span class="number">0xff</span>);</span><br><span class="line">        header[<span class="number">7</span>] = (<span class="keyword">byte</span>) ((totalDataLen &gt;&gt; <span class="number">24</span>) &amp; <span class="number">0xff</span>);</span><br><span class="line">        <span class="comment">//WAVE</span></span><br><span class="line">        header[<span class="number">8</span>] = <span class="string">'W'</span>;</span><br><span class="line">        header[<span class="number">9</span>] = <span class="string">'A'</span>;</span><br><span class="line">        header[<span class="number">10</span>] = <span class="string">'V'</span>;</span><br><span class="line">        header[<span class="number">11</span>] = <span class="string">'E'</span>;</span><br><span class="line">        <span class="comment">// 'fmt ' chunk</span></span><br><span class="line">        header[<span class="number">12</span>] = <span class="string">'f'</span>;</span><br><span class="line">        header[<span class="number">13</span>] = <span class="string">'m'</span>;</span><br><span class="line">        header[<span class="number">14</span>] = <span class="string">'t'</span>;</span><br><span class="line">        header[<span class="number">15</span>] = <span class="string">' '</span>;</span><br><span class="line">        <span class="comment">// 4 bytes: size of 'fmt ' chunk</span></span><br><span class="line">        header[<span class="number">16</span>] = <span class="number">16</span>;</span><br><span class="line">        header[<span class="number">17</span>] = <span class="number">0</span>;</span><br><span class="line">        header[<span class="number">18</span>] = <span class="number">0</span>;</span><br><span class="line">        header[<span class="number">19</span>] = <span class="number">0</span>;</span><br><span class="line">        <span class="comment">// format = 1</span></span><br><span class="line">        header[<span class="number">20</span>] = <span class="number">1</span>;</span><br><span class="line">        header[<span class="number">21</span>] = <span class="number">0</span>;</span><br><span class="line">        header[<span class="number">22</span>] = (<span class="keyword">byte</span>) channels;</span><br><span class="line">        header[<span class="number">23</span>] = <span class="number">0</span>;</span><br><span class="line">        header[<span class="number">24</span>] = (<span class="keyword">byte</span>) (longSampleRate &amp; <span class="number">0xff</span>);</span><br><span class="line">        header[<span class="number">25</span>] = (<span class="keyword">byte</span>) ((longSampleRate &gt;&gt; <span class="number">8</span>) &amp; <span class="number">0xff</span>);</span><br><span class="line">        header[<span class="number">26</span>] = (<span class="keyword">byte</span>) ((longSampleRate &gt;&gt; <span class="number">16</span>) &amp; <span class="number">0xff</span>);</span><br><span class="line">        header[<span class="number">27</span>] = (<span class="keyword">byte</span>) ((longSampleRate &gt;&gt; <span class="number">24</span>) &amp; <span class="number">0xff</span>);</span><br><span class="line">        header[<span class="number">28</span>] = (<span class="keyword">byte</span>) (byteRate &amp; <span class="number">0xff</span>);</span><br><span class="line">        header[<span class="number">29</span>] = (<span class="keyword">byte</span>) ((byteRate &gt;&gt; <span class="number">8</span>) &amp; <span class="number">0xff</span>);</span><br><span class="line">        header[<span class="number">30</span>] = (<span class="keyword">byte</span>) ((byteRate &gt;&gt; <span class="number">16</span>) &amp; <span class="number">0xff</span>);</span><br><span class="line">        header[<span class="number">31</span>] = (<span class="keyword">byte</span>) ((byteRate &gt;&gt; <span class="number">24</span>) &amp; <span class="number">0xff</span>);</span><br><span class="line">        <span class="comment">// block align</span></span><br><span class="line">        header[<span class="number">32</span>] = (<span class="keyword">byte</span>) (<span class="number">2</span> * <span class="number">16</span> / <span class="number">8</span>);</span><br><span class="line">        header[<span class="number">33</span>] = <span class="number">0</span>;</span><br><span class="line">        <span class="comment">// bits per sample</span></span><br><span class="line">        header[<span class="number">34</span>] = <span class="number">16</span>;</span><br><span class="line">        header[<span class="number">35</span>] = <span class="number">0</span>;</span><br><span class="line">        <span class="comment">//data</span></span><br><span class="line">        header[<span class="number">36</span>] = <span class="string">'d'</span>;</span><br><span class="line">        header[<span class="number">37</span>] = <span class="string">'a'</span>;</span><br><span class="line">        header[<span class="number">38</span>] = <span class="string">'t'</span>;</span><br><span class="line">        header[<span class="number">39</span>] = <span class="string">'a'</span>;</span><br><span class="line">        header[<span class="number">40</span>] = (<span class="keyword">byte</span>) (totalAudioLen &amp; <span class="number">0xff</span>);</span><br><span class="line">        header[<span class="number">41</span>] = (<span class="keyword">byte</span>) ((totalAudioLen &gt;&gt; <span class="number">8</span>) &amp; <span class="number">0xff</span>);</span><br><span class="line">        header[<span class="number">42</span>] = (<span class="keyword">byte</span>) ((totalAudioLen &gt;&gt; <span class="number">16</span>) &amp; <span class="number">0xff</span>);</span><br><span class="line">        header[<span class="number">43</span>] = (<span class="keyword">byte</span>) ((totalAudioLen &gt;&gt; <span class="number">24</span>) &amp; <span class="number">0xff</span>);</span><br></pre></td></tr></table></figure>
+<h2 id="使用AudioRecord录制pcm音频"><a href="#使用AudioRecord录制pcm音频" class="headerlink" title="使用AudioRecord录制pcm音频"></a>使用<code>AudioRecord</code>录制pcm音频</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 采样率，现在能够保证在所有设备上使用的采样率是44100Hz, 但是其他的采样率（22050, 16000, 11025）在一些设备上也可以使用。</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> SAMPLE_RATE_INHZ = <span class="number">44100</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 声道数。CHANNEL_IN_MONO and CHANNEL_IN_STEREO. 其中CHANNEL_IN_MONO是可以保证在所有设备能够使用的。</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> CHANNEL_CONFIG = AudioFormat.CHANNEL_IN_MONO;</span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 返回的音频数据的格式。 ENCODING_PCM_8BIT, ENCODING_PCM_16BIT, and ENCODING_PCM_FLOAT.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> AUDIO_FORMAT = AudioFormat.ENCODING_PCM_16BIT;</span><br><span class="line"></span><br><span class="line"><span class="keyword">final</span> <span class="keyword">int</span> minBufferSize = AudioRecord.getMinBufferSize(SAMPLE_RATE_INHZ, CHANNEL_CONFIG, AUDIO_FORMAT);</span><br><span class="line">audioRecord = <span class="keyword">new</span> AudioRecord(MediaRecorder.AudioSource.MIC, SAMPLE_RATE_INHZ,</span><br><span class="line">    CHANNEL_CONFIG, AUDIO_FORMAT, minBufferSize);</span><br><span class="line"></span><br><span class="line"><span class="keyword">final</span> <span class="keyword">byte</span> data[] = <span class="keyword">new</span> <span class="keyword">byte</span>[minBufferSize];</span><br><span class="line"><span class="keyword">final</span> File file = <span class="keyword">new</span> File(getExternalFilesDir(Environment.DIRECTORY_MUSIC), <span class="string">"test.pcm"</span>);</span><br><span class="line"><span class="keyword">if</span> (!file.mkdirs()) &#123;</span><br><span class="line">    Log.e(TAG, <span class="string">"Directory not created"</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">if</span> (file.exists()) &#123;</span><br><span class="line">    file.delete();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">audioRecord.startRecording();</span><br><span class="line">isRecording = <span class="keyword">true</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">new</span> Thread(<span class="keyword">new</span> Runnable() &#123;</span><br><span class="line">    <span class="meta">@Override</span> <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">        FileOutputStream os = <span class="keyword">null</span>;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            os = <span class="keyword">new</span> FileOutputStream(file);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (FileNotFoundException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (<span class="keyword">null</span> != os) &#123;</span><br><span class="line">            <span class="keyword">while</span> (isRecording) &#123;</span><br><span class="line">                <span class="keyword">int</span> read = audioRecord.read(data, <span class="number">0</span>, minBufferSize);</span><br><span class="line">                <span class="comment">// 如果读取音频数据没有出现错误，就将数据写入到文件</span></span><br><span class="line">                <span class="keyword">if</span> (AudioRecord.ERROR_INVALID_OPERATION != read) &#123;</span><br><span class="line">                    <span class="keyword">try</span> &#123;</span><br><span class="line">                        os.write(data);</span><br><span class="line">                    &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">                        e.printStackTrace();</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                Log.i(TAG, <span class="string">"run: close file output stream !"</span>);</span><br><span class="line">                os.close();</span><br><span class="line">            &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">                e.printStackTrace();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;).start();</span><br></pre></td></tr></table></figure>
+<h2 id="PCM转WAV"><a href="#PCM转WAV" class="headerlink" title="PCM转WAV"></a>PCM转WAV</h2><p>只要加上wav头文件即可。</p>
+<h2 id="使用AudioTrack播放pcm音频"><a href="#使用AudioTrack播放pcm音频" class="headerlink" title="使用AudioTrack播放pcm音频"></a>使用<code>AudioTrack</code>播放pcm音频</h2><blockquote>
+<p>AudioTrack 类为java程序实现了控制和播放简单的音频。它允许将 PCM音频流传输到音频接收器进行播放。这是通过将音频数据推给 AudioTrack对象实现的，可以使用 <code>write(byte[], int, int)</code> ,  <code>write(short[], int, int)</code> 或 <code>write(float[], int, int, int)</code> 方法。</p>
+<p>AudioTrack可以在两种模式下运行：static 或 streaming。<br>在Streaming模式下，应用程序使用其中一种write()方法将连续的数据流写入AudioTrack 。当数据从Java层传输到native层并排队等待播放时，它们会阻塞并返回。在播放音频数据块时，流模式非常有用，例如：</p>
+<ul>
+<li>由于声音播放的持续时间太长而不能装入内存，<ul>
+<li>由于音频数据的特性（高采样率，每个样本的位数……）而不能装入内存</li>
+<li>在先前排队的音频正在播放时接收或生成。</li>
+</ul>
+</li>
+</ul>
+<p>在处理能够装入内存的短音时，应选择静态模式，并且需要尽可能以最小的延迟播放。因此，对于经常播放的UI和游戏声音而言，静态模式将是优选的，并且可能具有最小的开销。</p>
+<p>一旦创建，AudioTrack对象将初始化其关联的音频缓冲区。在构建过程中指定的这个缓冲区的大小决定了AudioTrack在耗尽数据之前可以播放多长时间。</p>
+<p>对于使用静态模式的AudioTrack，此大小是可以从中播放的最大声音大小。</p>
+<p>对于流模式，数据将以小于或等于总缓冲区大小的块形式写入音频接收器。AudioTrack不是 final，因此允许使用子类，但不建议使用这种类型的子类.</p>
+</blockquote>
+<h2 id="使用-AudioTrack-播放音频"><a href="#使用-AudioTrack-播放音频" class="headerlink" title="使用 AudioTrack 播放音频"></a>使用 AudioTrack 播放音频</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 播放，使用stream模式</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">playInModeStream</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="comment">/*</span></span><br><span class="line"><span class="comment">        * SAMPLE_RATE_INHZ 对应pcm音频的采样率</span></span><br><span class="line"><span class="comment">        * channelConfig 对应pcm音频的声道</span></span><br><span class="line"><span class="comment">        * AUDIO_FORMAT 对应pcm音频的格式</span></span><br><span class="line"><span class="comment">        * */</span></span><br><span class="line">        <span class="keyword">int</span> channelConfig = AudioFormat.CHANNEL_OUT_MONO;</span><br><span class="line">        <span class="keyword">final</span> <span class="keyword">int</span> minBufferSize = AudioTrack.getMinBufferSize(SAMPLE_RATE_INHZ, channelConfig, AUDIO_FORMAT);</span><br><span class="line">        audioTrack = <span class="keyword">new</span> AudioTrack(</span><br><span class="line">            <span class="keyword">new</span> AudioAttributes.Builder()</span><br><span class="line">                .setUsage(AudioAttributes.USAGE_MEDIA)</span><br><span class="line">                .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)</span><br><span class="line">                .build(),</span><br><span class="line">            <span class="keyword">new</span> AudioFormat.Builder().setSampleRate(SAMPLE_RATE_INHZ)</span><br><span class="line">                .setEncoding(AUDIO_FORMAT)</span><br><span class="line">                .setChannelMask(channelConfig)</span><br><span class="line">                .build(),</span><br><span class="line">            minBufferSize,</span><br><span class="line">            AudioTrack.MODE_STREAM,</span><br><span class="line">            AudioManager.AUDIO_SESSION_ID_GENERATE);</span><br><span class="line">        audioTrack.play();</span><br><span class="line"></span><br><span class="line">        File file = <span class="keyword">new</span> File(getExternalFilesDir(Environment.DIRECTORY_MUSIC), <span class="string">"test.pcm"</span>);</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            fileInputStream = <span class="keyword">new</span> FileInputStream(file);</span><br><span class="line">            <span class="keyword">new</span> Thread(<span class="keyword">new</span> Runnable() &#123;</span><br><span class="line">                <span class="meta">@Override</span> <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">                    <span class="keyword">try</span> &#123;</span><br><span class="line">                        <span class="keyword">byte</span>[] tempBuffer = <span class="keyword">new</span> <span class="keyword">byte</span>[minBufferSize];</span><br><span class="line">                        <span class="keyword">while</span> (fileInputStream.available() &gt; <span class="number">0</span>) &#123;</span><br><span class="line">                            <span class="keyword">int</span> readCount = fileInputStream.read(tempBuffer);</span><br><span class="line">                            <span class="keyword">if</span> (readCount == AudioTrack.ERROR_INVALID_OPERATION ||</span><br><span class="line">                                readCount == AudioTrack.ERROR_BAD_VALUE) &#123;</span><br><span class="line">                                <span class="keyword">continue</span>;</span><br><span class="line">                            &#125;</span><br><span class="line">                            <span class="keyword">if</span> (readCount != <span class="number">0</span> &amp;&amp; readCount != -<span class="number">1</span>) &#123;</span><br><span class="line">                                audioTrack.write(tempBuffer, <span class="number">0</span>, readCount);</span><br><span class="line">                            &#125;</span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">                        e.printStackTrace();</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;).start();</span><br><span class="line"></span><br><span class="line">        &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 播放，使用static模式</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">playInModeStatic</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="comment">// static模式，需要将音频数据一次性write到AudioTrack的内部缓冲区</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">new</span> AsyncTask&lt;Void, Void, Void&gt;() &#123;</span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="function"><span class="keyword">protected</span> Void <span class="title">doInBackground</span><span class="params">(Void... params)</span> </span>&#123;</span><br><span class="line">                <span class="keyword">try</span> &#123;</span><br><span class="line">                    InputStream in = getResources().openRawResource(R.raw.ding);</span><br><span class="line">                    <span class="keyword">try</span> &#123;</span><br><span class="line">                        ByteArrayOutputStream out = <span class="keyword">new</span> ByteArrayOutputStream();</span><br><span class="line">                        <span class="keyword">for</span> (<span class="keyword">int</span> b; (b = in.read()) != -<span class="number">1</span>; ) &#123;</span><br><span class="line">                            out.write(b);</span><br><span class="line">                        &#125;</span><br><span class="line">                        Log.d(TAG, <span class="string">"Got the data"</span>);</span><br><span class="line">                        audioData = out.toByteArray();</span><br><span class="line">                    &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">                        in.close();</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">                    Log.wtf(TAG, <span class="string">"Failed to read"</span>, e);</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onPostExecute</span><span class="params">(Void v)</span> </span>&#123;</span><br><span class="line">                Log.i(TAG, <span class="string">"Creating track...audioData.length = "</span> + audioData.length);</span><br><span class="line"></span><br><span class="line">                <span class="comment">// R.raw.ding铃声文件的相关属性为 22050Hz, 8-bit, Mono</span></span><br><span class="line">                audioTrack = <span class="keyword">new</span> AudioTrack(</span><br><span class="line">                    <span class="keyword">new</span> AudioAttributes.Builder()</span><br><span class="line">                        .setUsage(AudioAttributes.USAGE_MEDIA)</span><br><span class="line">                        .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)</span><br><span class="line">                        .build(),</span><br><span class="line">                    <span class="keyword">new</span> AudioFormat.Builder().setSampleRate(<span class="number">22050</span>)</span><br><span class="line">                        .setEncoding(AudioFormat.ENCODING_PCM_8BIT)</span><br><span class="line">                        .setChannelMask(AudioFormat.CHANNEL_OUT_MONO)</span><br><span class="line">                        .build(),</span><br><span class="line">                    audioData.length,</span><br><span class="line">                    AudioTrack.MODE_STATIC,</span><br><span class="line">                    AudioManager.AUDIO_SESSION_ID_GENERATE);</span><br><span class="line">                Log.d(TAG, <span class="string">"Writing audio data..."</span>);</span><br><span class="line">                audioTrack.write(audioData, <span class="number">0</span>, audioData.length);</span><br><span class="line">                Log.d(TAG, <span class="string">"Starting playback"</span>);</span><br><span class="line">                audioTrack.play();</span><br><span class="line">                Log.d(TAG, <span class="string">"Playing"</span>);</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">        &#125;.execute();</span><br><span class="line"></span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<h2 id="疑惑"><a href="#疑惑" class="headerlink" title="疑惑"></a>疑惑</h2><ol>
+<li>采样位数是如何获取的？</li>
+</ol>
+<blockquote>
+<p>Thanks</p>
+<ul>
+<li><a href="http://www.cnblogs.com/renhui/p/7463287.html" target="_blank" rel="noopener">http://www.cnblogs.com/renhui/p/7463287.html</a></li>
+</ul>
+</blockquote>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/AudioRecord-AudioTrack-pcm-wav/" rel="tag"># AudioRecord,AudioTrack,pcm,wav,</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/03/20/2018-3-20-使用三种方式绘制一张图片/" rel="next" title="使用三种方式绘制一张图片">
+                <i class="fa fa-chevron-left"></i> 使用三种方式绘制一张图片
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zMjY1Ni85MjE3"></div>
+    </div>
+  
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">adaJQD</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">5</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                
+                  <span class="site-state-item-count">2</span>
+                  <span class="site-state-item-name">分类</span>
+                
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">3</span>
+                  <span class="site-state-item-name">标签</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          <div class="links-of-author motion-element">
+            
+          </div>
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#音频基础知识"><span class="nav-number">1.</span> <span class="nav-text"><a href="#&#x97F3;&#x9891;&#x57FA;&#x7840;&#x77E5;&#x8BC6;" class="headerlink" title="&#x97F3;&#x9891;&#x57FA;&#x7840;&#x77E5;&#x8BC6;"></a>&#x97F3;&#x9891;&#x57FA;&#x7840;&#x77E5;&#x8BC6;</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#声道数（通道数）"><span class="nav-number">1.1.</span> <span class="nav-text"><a href="#&#x58F0;&#x9053;&#x6570;&#xFF08;&#x901A;&#x9053;&#x6570;&#xFF09;" class="headerlink" title="&#x58F0;&#x9053;&#x6570;&#xFF08;&#x901A;&#x9053;&#x6570;&#xFF09;"></a>&#x58F0;&#x9053;&#x6570;&#xFF08;&#x901A;&#x9053;&#x6570;&#xFF09;</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#采样位数"><span class="nav-number">1.2.</span> <span class="nav-text"><a href="#&#x91C7;&#x6837;&#x4F4D;&#x6570;" class="headerlink" title="&#x91C7;&#x6837;&#x4F4D;&#x6570;"></a>&#x91C7;&#x6837;&#x4F4D;&#x6570;</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#采样频率"><span class="nav-number">1.3.</span> <span class="nav-text"><a href="#&#x91C7;&#x6837;&#x9891;&#x7387;" class="headerlink" title="&#x91C7;&#x6837;&#x9891;&#x7387;"></a>&#x91C7;&#x6837;&#x9891;&#x7387;</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#PCM-介绍"><span class="nav-number">2.</span> <span class="nav-text"><a href="#PCM-&#x4ECB;&#x7ECD;" class="headerlink" title="PCM &#x4ECB;&#x7ECD;"></a>PCM &#x4ECB;&#x7ECD;</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#WAV"><span class="nav-number">3.</span> <span class="nav-text"><a href="#WAV" class="headerlink" title="WAV"></a>WAV</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#wav文件格式"><span class="nav-number">3.1.</span> <span class="nav-text"><a href="#wav&#x6587;&#x4EF6;&#x683C;&#x5F0F;" class="headerlink" title="wav&#x6587;&#x4EF6;&#x683C;&#x5F0F;"></a>wav&#x6587;&#x4EF6;&#x683C;&#x5F0F;</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#使用AudioRecord录制pcm音频"><span class="nav-number">4.</span> <span class="nav-text"><a href="#&#x4F7F;&#x7528;AudioRecord&#x5F55;&#x5236;pcm&#x97F3;&#x9891;" class="headerlink" title="&#x4F7F;&#x7528;AudioRecord&#x5F55;&#x5236;pcm&#x97F3;&#x9891;"></a>&#x4F7F;&#x7528;<code>AudioRecord</code>&#x5F55;&#x5236;pcm&#x97F3;&#x9891;</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#PCM转WAV"><span class="nav-number">5.</span> <span class="nav-text"><a href="#PCM&#x8F6C;WAV" class="headerlink" title="PCM&#x8F6C;WAV"></a>PCM&#x8F6C;WAV</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#使用AudioTrack播放pcm音频"><span class="nav-number">6.</span> <span class="nav-text"><a href="#&#x4F7F;&#x7528;AudioTrack&#x64AD;&#x653E;pcm&#x97F3;&#x9891;" class="headerlink" title="&#x4F7F;&#x7528;AudioTrack&#x64AD;&#x653E;pcm&#x97F3;&#x9891;"></a>&#x4F7F;&#x7528;<code>AudioTrack</code>&#x64AD;&#x653E;pcm&#x97F3;&#x9891;</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#使用-AudioTrack-播放音频"><span class="nav-number">7.</span> <span class="nav-text"><a href="#&#x4F7F;&#x7528;-AudioTrack-&#x64AD;&#x653E;&#x97F3;&#x9891;" class="headerlink" title="&#x4F7F;&#x7528; AudioTrack &#x64AD;&#x653E;&#x97F3;&#x9891;"></a>&#x4F7F;&#x7528; AudioTrack &#x64AD;&#x653E;&#x97F3;&#x9891;</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#疑惑"><span class="nav-number">8.</span> <span class="nav-text"><a href="#&#x7591;&#x60D1;" class="headerlink" title="&#x7591;&#x60D1;"></a>&#x7591;&#x60D1;</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">adaJQD</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.3</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.3"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.3"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.3"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.3"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.3"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.3"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.3"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+  <script>AV.initialize("xq7ihVSjkVklJuy5VFoXfeSo-gzGzoHsz", "hWnVua3fWpfnMQyzVhYNswtz");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
