@@ -87,7 +87,7 @@
 <meta property="og:site_name" content="adaJQD的博客">
 <meta property="og:description" content="英文原文 这个library的名字，Mosby，是为了致敬著名电视连续剧 How I Met Your Mother 中的灵魂人物建筑师 Ted Mosby 。这个库的目的是帮助你用一个干净的Model-View-Presenter架构来构建先进的android应用程序。此外，Mosby通过引入 ViewState 和保留Presenters帮助您处理屏幕方向的更改。">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2017-12-20T07:44:54.000Z">
+<meta property="og:updated_time" content="2017-12-20T07:44:54.765Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Mosby翻译(一) : 简介-用于android的MVP库">
 <meta name="twitter:description" content="英文原文 这个library的名字，Mosby，是为了致敬著名电视连续剧 How I Met Your Mother 中的灵魂人物建筑师 Ted Mosby 。这个库的目的是帮助你用一个干净的Model-View-Presenter架构来构建先进的android应用程序。此外，Mosby通过引入 ViewState 和保留Presenters帮助您处理屏幕方向的更改。">
@@ -696,25 +696,67 @@
 
 
 
-  
-    <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+    
+     <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
     <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
-    <script type="text/javascript">
-      const gitalk = new Gitalk({
-        clientID: '3e08a4c04e66762c92c7',
-        clientSecret: 'b2908a3d13a62da2e790a7eaed6b38d0405d8f0b',
-        repo: 'adajqd.github.io',
-        owner: 'adaJQD',
-        admin: 'adaJQD'.split(','),
-        id: location.pathname,
-        // facebook-like distraction free mode
-        distractionFreeMode: 'true',
-        createIssueManually: 'true'
-      })
-      gitalk.render('gitalk-container')
-    </script>
-  
+      <script>
+        //ȥ��β��ƥ������������ַ���  
+        String.prototype.trimEnd = function(regStr)  
+        {  
+            var result = this;
+            if(regStr==undefined||regStr==null||regStr=="")  
+            {    
+                return result;
+            }
+            var array = regStr.split(',');
 
+            if(array.length > 0){
+                 
+                var c = array.shift();
+                var str= this;
+                var i = str.length;  
+                var rg = new RegExp(c);
+                var matchArr = str.match(rg);
+
+                if(matchArr != undefined && matchArr != null && matchArr.length > 0)
+                {
+                  var matchStr = matchArr[0].replace(/\\/g, "\\\\").replace(/\*/g, "\\*")
+                                            .replace(/\+/g, "\\+").replace(/\|/g, "\\|")
+                                            .replace(/\{/g, "\\{").replace(/\}/g, "\\}")
+                                            .replace(/\(/g, "\\(").replace(/\)/g, "\\)")
+                                            .replace(/\^/g, "\\^").replace(/\$/g, "\\$")
+                                            .replace(/\[/g, "\\[").replace(/\]/g, "\\]")
+                                            .replace(/\?/g, "\\?").replace(/\,/g, "\\,")
+                                            .replace(/\./g, "\\.").replace(/\&/g, "\\&");
+                  matchStr = matchStr + '$';
+                  result = str.replace(new RegExp(matchStr), "");
+                }
+                
+                if(array.length > 0){
+                    return result.trimEnd(array.join())
+                }
+                else{
+                    return result; 
+                } 
+            } 
+        };
+      </script>
+      <script type="text/javascript">
+        const gitalk = new Gitalk({
+          clientID: '3e08a4c04e66762c92c7',
+          clientSecret: 'b2908a3d13a62da2e790a7eaed6b38d0405d8f0b',
+          repo: 'adajqd.github.io',
+          owner: 'adaJQD',
+          admin: 'adaJQD'.split(','),
+          pagerDirection: '',
+          // facebook-like distraction free mode
+          distractionFreeMode: false,
+          id: md5(location.href.trimEnd(''))
+        })
+        gitalk.render('gitalk-container')
+      </script>
+    
+  
 
   
 
