@@ -6,10 +6,10 @@
 
 
 <html class="theme-next mist use-motion" lang="zh-Hans">
-<head>
-  <meta charset="UTF-8"/>
-<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 <meta name="theme-color" content="#222">
 
 
@@ -20,8 +20,8 @@
 
 
 
-<meta http-equiv="Cache-Control" content="no-transform" />
-<meta http-equiv="Cache-Control" content="no-siteapp" />
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
 
 
 
@@ -40,7 +40,7 @@
 
   
   
-  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
 
 
 
@@ -48,9 +48,9 @@
 
 
 
-<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
 
-<link href="/css/main.css?v=5.1.3" rel="stylesheet" type="text/css" />
+<link href="/css/main.css?v=5.1.3" rel="stylesheet" type="text/css">
 
 
   <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png?v=5.1.3">
@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="Mosby," />
+  <meta name="keywords" content="Mosby,">
 
 
 
@@ -84,7 +84,7 @@
 <meta property="og:type" content="article">
 <meta property="og:title" content="Mosby翻译(三) : MVP原理">
 <meta property="og:url" content="https://adajqd.github.io/2017/12/20/mosby-mvp/index.html">
-<meta property="og:site_name" content="adaJQD的博客">
+<meta property="og:site_name" content="Jack&#39;s blog">
 <meta property="og:description" content="英文原文 本文主要介绍 Model-View-Presenter (MVP)的原理，以及如何使用Mosby创建基于MVP的应用程序。  model 是将在视图（用户界面）中显示的数据。 view 是显示数据（model）并将用户命令（事件）传递到 Presenter 以对该数据执行操作的界面。view 通常对其Presenter有一个引用。 Presenter 是“中间人”（就像MVC中的cont">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://hannesdorfmann.com/mosby/images/mvp-overview.png">
@@ -129,13 +129,13 @@
 
 
 
-  <link rel="canonical" href="https://adajqd.github.io/2017/12/20/mosby-mvp/"/>
+  <link rel="canonical" href="https://adajqd.github.io/2017/12/20/mosby-mvp/">
 
 
 
 
 
-  <title>Mosby翻译(三) : MVP原理 | adaJQD的博客</title>
+  <title>Mosby翻译(三) : MVP原理 | Jack's blog</title>
   
 
 
@@ -157,7 +157,7 @@
 
 </head>
 
-<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
 
   
   
@@ -167,15 +167,15 @@
   <div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
 
-    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
       <div class="header-inner"><div class="site-brand-wrapper">
   <div class="site-meta ">
     
 
     <div class="custom-logo-site-title">
-      <a href="/"  class="brand" rel="start">
+      <a href="/" class="brand" rel="start">
         <span class="logo-line-before"><i></i></span>
-        <span class="site-title">adaJQD的博客</span>
+        <span class="site-title">Jack's blog</span>
         <span class="logo-line-after"><i></i></span>
       </a>
     </div>
@@ -203,7 +203,7 @@
         <li class="menu-item menu-item-home">
           <a href="/" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
             
             首页
           </a>
@@ -213,7 +213,7 @@
         <li class="menu-item menu-item-about">
           <a href="/about/" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
             
             关于
           </a>
@@ -223,7 +223,7 @@
         <li class="menu-item menu-item-categories">
           <a href="/categories/" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
             
             分类
           </a>
@@ -233,7 +233,7 @@
         <li class="menu-item menu-item-archives">
           <a href="/archives/" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
             
             归档
           </a>
@@ -267,21 +267,21 @@
   
   
 
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
   
   
   
   <div class="post-block">
     <link itemprop="mainEntityOfPage" href="https://adajqd.github.io/2017/12/20/mosby-mvp/">
 
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="adaJQD">
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Jack">
       <meta itemprop="description" content="">
       <meta itemprop="image" content="/images/avatar.gif">
     </span>
 
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="adaJQD的博客">
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jack's blog">
     </span>
 
     
@@ -312,7 +312,7 @@
           </span>
 
           
-            <span class="post-category" >
+            <span class="post-category">
             
               <span class="post-meta-divider">|</span>
             
@@ -323,7 +323,7 @@
                 <span class="post-meta-item-text">分类于</span>
               
               
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
                   <a href="/categories/Mosby翻译/" itemprop="url" rel="index">
                     <span itemprop="name">Mosby翻译</span>
                   </a>
@@ -486,14 +486,14 @@
 
     
       <div id="wechat" style="display: inline-block">
-        <img id="wechat_qr" src="/images/wechatpay.jpg" alt="adaJQD 微信支付"/>
+        <img id="wechat_qr" src="/images/wechatpay.jpg" alt="Jack 微信支付">
         <p>微信支付</p>
       </div>
     
 
     
       <div id="alipay" style="display: inline-block">
-        <img id="alipay_qr" src="/images/alipay.jpg" alt="adaJQD 支付宝"/>
+        <img id="alipay_qr" src="/images/alipay.jpg" alt="Jack 支付宝">
         <p>支付宝</p>
       </div>
     
@@ -601,9 +601,9 @@
 
       <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
-          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
             
-              <p class="site-author-name" itemprop="name">adaJQD</p>
+              <p class="site-author-name" itemprop="name">Jack</p>
               <p class="site-description motion-element" itemprop="description"></p>
           </div>
 
@@ -671,7 +671,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Android上的MVP"><span class="nav-number">1.</span> <span class="nav-text"><a href="#Android&#x4E0A;&#x7684;MVP" class="headerlink" title="Android&#x4E0A;&#x7684;MVP"></a>Android&#x4E0A;&#x7684;MVP</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#我们为什么要实现MVP？"><span class="nav-number">2.</span> <span class="nav-text"><a href="#&#x6211;&#x4EEC;&#x4E3A;&#x4EC0;&#x4E48;&#x8981;&#x5B9E;&#x73B0;MVP&#xFF1F;" class="headerlink" title="&#x6211;&#x4EEC;&#x4E3A;&#x4EC0;&#x4E48;&#x8981;&#x5B9E;&#x73B0;MVP&#xFF1F;"></a>&#x6211;&#x4EEC;&#x4E3A;&#x4EC0;&#x4E48;&#x8981;&#x5B9E;&#x73B0;MVP&#xFF1F;</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Mosby"><span class="nav-number">3.</span> <span class="nav-text"><a href="#Mosby" class="headerlink" title="Mosby"></a>Mosby</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#MvpView和MvpPresenter"><span class="nav-number">4.</span> <span class="nav-text"><a href="#MvpView&#x548C;MvpPresenter" class="headerlink" title="MvpView&#x548C;MvpPresenter"></a>MvpView&#x548C;MvpPresenter</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#MvpActivity和MvpFragment"><span class="nav-number">5.</span> <span class="nav-text"><a href="#MvpActivity&#x548C;MvpFragment" class="headerlink" title="MvpActivity&#x548C;MvpFragment"></a>MvpActivity&#x548C;MvpFragment</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#加载内容错误（LCE）"><span class="nav-number">6.</span> <span class="nav-text"><a href="#&#x52A0;&#x8F7D;&#x5185;&#x5BB9;&#x9519;&#x8BEF;&#xFF08;LCE&#xFF09;" class="headerlink" title="&#x52A0;&#x8F7D;&#x5185;&#x5BB9;&#x9519;&#x8BEF;&#xFF08;LCE&#xFF09;"></a>&#x52A0;&#x8F7D;&#x5185;&#x5BB9;&#x9519;&#x8BEF;&#xFF08;LCE&#xFF09;</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#示例"><span class="nav-number">7.</span> <span class="nav-text"><a href="#&#x793A;&#x4F8B;" class="headerlink" title="&#x793A;&#x4F8B;"></a>&#x793A;&#x4F8B;</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ViewGroup"><span class="nav-number">8.</span> <span class="nav-text"><a href="#ViewGroup" class="headerlink" title="ViewGroup"></a>ViewGroup</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Delegation委托"><span class="nav-number">9.</span> <span class="nav-text"><a href="#Delegation&#x59D4;&#x6258;" class="headerlink" title="Delegation&#x59D4;&#x6258;"></a>Delegation&#x59D4;&#x6258;</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#演示模型"><span class="nav-number">10.</span> <span class="nav-text"><a href="#&#x6F14;&#x793A;&#x6A21;&#x578B;" class="headerlink" title="&#x6F14;&#x793A;&#x6A21;&#x578B;"></a>&#x6F14;&#x793A;&#x6A21;&#x578B;</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Android上的MVP"><span class="nav-number">1.</span> <span class="nav-text">Android上的MVP</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#我们为什么要实现MVP？"><span class="nav-number">2.</span> <span class="nav-text">我们为什么要实现MVP？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Mosby"><span class="nav-number">3.</span> <span class="nav-text">Mosby</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#MvpView和MvpPresenter"><span class="nav-number">4.</span> <span class="nav-text">MvpView和MvpPresenter</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#MvpActivity和MvpFragment"><span class="nav-number">5.</span> <span class="nav-text">MvpActivity和MvpFragment</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#加载内容错误（LCE）"><span class="nav-number">6.</span> <span class="nav-text">加载内容错误（LCE）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#示例"><span class="nav-number">7.</span> <span class="nav-text">示例</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ViewGroup"><span class="nav-number">8.</span> <span class="nav-text">ViewGroup</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Delegation委托"><span class="nav-number">9.</span> <span class="nav-text">Delegation委托</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#演示模型"><span class="nav-number">10.</span> <span class="nav-text">演示模型</span></a></li></ol></div>
             
 
           </div>
@@ -691,11 +691,11 @@
 
     <footer id="footer" class="footer">
       <div class="footer-inner">
-        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
   <span class="with-love">
     <i class="fa fa-user"></i>
   </span>
-  <span class="author" itemprop="copyrightHolder">adaJQD</span>
+  <span class="author" itemprop="copyrightHolder">Jack</span>
 
   
 </div>

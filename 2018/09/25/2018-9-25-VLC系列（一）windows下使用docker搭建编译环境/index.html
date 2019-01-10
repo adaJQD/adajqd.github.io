@@ -6,10 +6,10 @@
 
 
 <html class="theme-next mist use-motion" lang="zh-Hans">
-<head>
-  <meta charset="UTF-8"/>
-<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 <meta name="theme-color" content="#222">
 
 
@@ -20,8 +20,8 @@
 
 
 
-<meta http-equiv="Cache-Control" content="no-transform" />
-<meta http-equiv="Cache-Control" content="no-siteapp" />
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
 
 
 
@@ -40,7 +40,7 @@
 
   
   
-  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
 
 
 
@@ -48,9 +48,9 @@
 
 
 
-<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
 
-<link href="/css/main.css?v=5.1.3" rel="stylesheet" type="text/css" />
+<link href="/css/main.css?v=5.1.3" rel="stylesheet" type="text/css">
 
 
   <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png?v=5.1.3">
@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="vlc," />
+  <meta name="keywords" content="vlc,">
 
 
 
@@ -84,7 +84,7 @@
 <meta property="og:type" content="article">
 <meta property="og:title" content="VLC系列（一）windows下使用docker搭建编译环境">
 <meta property="og:url" content="https://adajqd.github.io/2018/09/25/2018-9-25-VLC系列（一）windows下使用docker搭建编译环境/index.html">
-<meta property="og:site_name" content="adaJQD的博客">
+<meta property="og:site_name" content="Jack&#39;s blog">
 <meta property="og:description" content="使用的是win10系统，使用docker通过Dockerfile来构建镜像。 1. 改造Dockerfile改造官方出的docker images中vlc-debian-android下的Dockerfile 所做的修改包括：  使用阿里云debian源 增加必要的apt-get update">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:updated_time" content="2018-09-25T13:06:40.854Z">
@@ -120,13 +120,13 @@
 
 
 
-  <link rel="canonical" href="https://adajqd.github.io/2018/09/25/2018-9-25-VLC系列（一）windows下使用docker搭建编译环境/"/>
+  <link rel="canonical" href="https://adajqd.github.io/2018/09/25/2018-9-25-VLC系列（一）windows下使用docker搭建编译环境/">
 
 
 
 
 
-  <title>VLC系列（一）windows下使用docker搭建编译环境 | adaJQD的博客</title>
+  <title>VLC系列（一）windows下使用docker搭建编译环境 | Jack's blog</title>
   
 
 
@@ -148,7 +148,7 @@
 
 </head>
 
-<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
 
   
   
@@ -158,15 +158,15 @@
   <div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
 
-    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
       <div class="header-inner"><div class="site-brand-wrapper">
   <div class="site-meta ">
     
 
     <div class="custom-logo-site-title">
-      <a href="/"  class="brand" rel="start">
+      <a href="/" class="brand" rel="start">
         <span class="logo-line-before"><i></i></span>
-        <span class="site-title">adaJQD的博客</span>
+        <span class="site-title">Jack's blog</span>
         <span class="logo-line-after"><i></i></span>
       </a>
     </div>
@@ -194,7 +194,7 @@
         <li class="menu-item menu-item-home">
           <a href="/" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
             
             首页
           </a>
@@ -204,7 +204,7 @@
         <li class="menu-item menu-item-about">
           <a href="/about/" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
             
             关于
           </a>
@@ -214,7 +214,7 @@
         <li class="menu-item menu-item-categories">
           <a href="/categories/" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
             
             分类
           </a>
@@ -224,7 +224,7 @@
         <li class="menu-item menu-item-archives">
           <a href="/archives/" rel="section">
             
-              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
             
             归档
           </a>
@@ -258,21 +258,21 @@
   
   
 
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
   
   
   
   <div class="post-block">
     <link itemprop="mainEntityOfPage" href="https://adajqd.github.io/2018/09/25/2018-9-25-VLC系列（一）windows下使用docker搭建编译环境/">
 
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="adaJQD">
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Jack">
       <meta itemprop="description" content="">
       <meta itemprop="image" content="/images/avatar.gif">
     </span>
 
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="adaJQD的博客">
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jack's blog">
     </span>
 
     
@@ -303,7 +303,7 @@
           </span>
 
           
-            <span class="post-category" >
+            <span class="post-category">
             
               <span class="post-meta-divider">|</span>
             
@@ -314,7 +314,7 @@
                 <span class="post-meta-item-text">分类于</span>
               
               
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
                   <a href="/categories/vlc/" itemprop="url" rel="index">
                     <span itemprop="name">vlc</span>
                   </a>
@@ -401,14 +401,14 @@
 
     
       <div id="wechat" style="display: inline-block">
-        <img id="wechat_qr" src="/images/wechatpay.jpg" alt="adaJQD 微信支付"/>
+        <img id="wechat_qr" src="/images/wechatpay.jpg" alt="Jack 微信支付">
         <p>微信支付</p>
       </div>
     
 
     
       <div id="alipay" style="display: inline-block">
-        <img id="alipay_qr" src="/images/alipay.jpg" alt="adaJQD 支付宝"/>
+        <img id="alipay_qr" src="/images/alipay.jpg" alt="Jack 支付宝">
         <p>支付宝</p>
       </div>
     
@@ -516,9 +516,9 @@
 
       <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
-          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
             
-              <p class="site-author-name" itemprop="name">adaJQD</p>
+              <p class="site-author-name" itemprop="name">Jack</p>
               <p class="site-description motion-element" itemprop="description"></p>
           </div>
 
@@ -586,7 +586,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-改造Dockerfile"><span class="nav-number">1.</span> <span class="nav-text"><a href="#1-&#x6539;&#x9020;Dockerfile" class="headerlink" title="1. &#x6539;&#x9020;Dockerfile"></a>1. &#x6539;&#x9020;Dockerfile</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-使用Dockerfile构建镜像"><span class="nav-number">2.</span> <span class="nav-text"><a href="#2-&#x4F7F;&#x7528;Dockerfile&#x6784;&#x5EFA;&#x955C;&#x50CF;" class="headerlink" title="2. &#x4F7F;&#x7528;Dockerfile&#x6784;&#x5EFA;&#x955C;&#x50CF;"></a>2. &#x4F7F;&#x7528;Dockerfile&#x6784;&#x5EFA;&#x955C;&#x50CF;</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-基于上面的镜像新建容器并启动"><span class="nav-number">3.</span> <span class="nav-text"><a href="#3-&#x57FA;&#x4E8E;&#x4E0A;&#x9762;&#x7684;&#x955C;&#x50CF;&#x65B0;&#x5EFA;&#x5BB9;&#x5668;&#x5E76;&#x542F;&#x52A8;" class="headerlink" title="3. &#x57FA;&#x4E8E;&#x4E0A;&#x9762;&#x7684;&#x955C;&#x50CF;&#x65B0;&#x5EFA;&#x5BB9;&#x5668;&#x5E76;&#x542F;&#x52A8;"></a>3. &#x57FA;&#x4E8E;&#x4E0A;&#x9762;&#x7684;&#x955C;&#x50CF;&#x65B0;&#x5EFA;&#x5BB9;&#x5668;&#x5E76;&#x542F;&#x52A8;</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-设置环境变量"><span class="nav-number">4.</span> <span class="nav-text"><a href="#4-&#x8BBE;&#x7F6E;&#x73AF;&#x5883;&#x53D8;&#x91CF;" class="headerlink" title="4. &#x8BBE;&#x7F6E;&#x73AF;&#x5883;&#x53D8;&#x91CF;"></a>4. &#x8BBE;&#x7F6E;&#x73AF;&#x5883;&#x53D8;&#x91CF;</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-下载源码"><span class="nav-number">5.</span> <span class="nav-text"><a href="#5-&#x4E0B;&#x8F7D;&#x6E90;&#x7801;" class="headerlink" title="5. &#x4E0B;&#x8F7D;&#x6E90;&#x7801;"></a>5. &#x4E0B;&#x8F7D;&#x6E90;&#x7801;</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-编译"><span class="nav-number">6.</span> <span class="nav-text"><a href="#6-&#x7F16;&#x8BD1;" class="headerlink" title="6. &#x7F16;&#x8BD1;"></a>6. &#x7F16;&#x8BD1;</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-改造Dockerfile"><span class="nav-number">1.</span> <span class="nav-text">1. 改造Dockerfile</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-使用Dockerfile构建镜像"><span class="nav-number">2.</span> <span class="nav-text">2. 使用Dockerfile构建镜像</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-基于上面的镜像新建容器并启动"><span class="nav-number">3.</span> <span class="nav-text">3. 基于上面的镜像新建容器并启动</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-设置环境变量"><span class="nav-number">4.</span> <span class="nav-text">4. 设置环境变量</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-下载源码"><span class="nav-number">5.</span> <span class="nav-text">5. 下载源码</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-编译"><span class="nav-number">6.</span> <span class="nav-text">6. 编译</span></a></li></ol></div>
             
 
           </div>
@@ -606,11 +606,11 @@
 
     <footer id="footer" class="footer">
       <div class="footer-inner">
-        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
   <span class="with-love">
     <i class="fa fa-user"></i>
   </span>
-  <span class="author" itemprop="copyrightHolder">adaJQD</span>
+  <span class="author" itemprop="copyrightHolder">Jack</span>
 
   
 </div>
