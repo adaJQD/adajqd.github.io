@@ -1,0 +1,1079 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.3" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png?v=5.1.3">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png?v=5.1.3">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png?v=5.1.3">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.3" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="RxJava2,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="有些翻译仍不准确，会持续改进。  术语上游，下游RxJava中的数据流包括一个数据源、0个或多个中间步骤、一个数据消费者或组合子步骤(其中的步骤负责以某种方式使用数据流):123source.operator1().operator2().operator3().subscribe(consumer);source.flatMap(value -&amp;gt; source.operator1().o">
+<meta name="keywords" content="RxJava2">
+<meta property="og:type" content="article">
+<meta property="og:title" content="RxJava2外传Ⅰ：官方README翻译">
+<meta property="og:url" content="https://adajqd.github.io/2019/01/13/2019-1-13-RxJava2外传Ⅰ：官方README翻译/index.html">
+<meta property="og:site_name" content="Jack&#39;s blog">
+<meta property="og:description" content="有些翻译仍不准确，会持续改进。  术语上游，下游RxJava中的数据流包括一个数据源、0个或多个中间步骤、一个数据消费者或组合子步骤(其中的步骤负责以某种方式使用数据流):123source.operator1().operator2().operator3().subscribe(consumer);source.flatMap(value -&amp;gt; source.operator1().o">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2019-01-13T14:10:51.695Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="RxJava2外传Ⅰ：官方README翻译">
+<meta name="twitter:description" content="有些翻译仍不准确，会持续改进。  术语上游，下游RxJava中的数据流包括一个数据源、0个或多个中间步骤、一个数据消费者或组合子步骤(其中的步骤负责以某种方式使用数据流):123source.operator1().operator2().operator3().subscribe(consumer);source.flatMap(value -&amp;gt; source.operator1().o">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '5.1.3',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://adajqd.github.io/2019/01/13/2019-1-13-RxJava2外传Ⅰ：官方README翻译/">
+
+
+
+
+
+  <title>RxJava2外传Ⅰ：官方README翻译 | Jack's blog</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?a22ce718cdbf28822bc67e6a8dcf181d";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Jack's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://adajqd.github.io/2019/01/13/2019-1-13-RxJava2外传Ⅰ：官方README翻译/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Jack">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jack's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">RxJava2外传Ⅰ：官方README翻译</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-01-13T22:10:38+08:00">
+                2019-01-13
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/RxJava2/" itemprop="url" rel="index">
+                    <span itemprop="name">RxJava2</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2019/01/13/2019-1-13-RxJava2外传Ⅰ：官方README翻译/" class="leancloud_visitors" data-flag-title="RxJava2外传Ⅰ：官方README翻译">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <blockquote>
+<p>有些翻译仍不准确，会持续改进。</p>
+</blockquote>
+<h2 id="术语"><a href="#术语" class="headerlink" title="术语"></a>术语</h2><h3 id="上游，下游"><a href="#上游，下游" class="headerlink" title="上游，下游"></a>上游，下游</h3><p>RxJava中的数据流包括一个数据源、0个或多个中间步骤、一个数据消费者或组合子步骤(其中的步骤负责以某种方式使用数据流):<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">source.operator1().operator2().operator3().subscribe(consumer);</span><br><span class="line"></span><br><span class="line">source.flatMap(value -&gt; source.operator1().operator2().operator3());</span><br></pre></td></tr></table></figure></p>
+<p>如果我们想象自己站在operator2上，向左看向source，叫做上游；向右看向subscriber/consumer，叫做下游。当像下面这样每个元素单独写一行时看的更加明显：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">source</span><br><span class="line">  .operator1()</span><br><span class="line">  .operator2()</span><br><span class="line">  .operator3()</span><br><span class="line">  .subscribe(consumer)</span><br></pre></td></tr></table></figure></p>
+<a id="more"></a>
+<h3 id="运动的对象"><a href="#运动的对象" class="headerlink" title="运动的对象"></a>运动的对象</h3><p>在RxJava的文档中， emission, emits, item, event, signal, data and message都是近义词，都表示沿着数据流移动的对象。</p>
+<h3 id="背压"><a href="#背压" class="headerlink" title="背压"></a>背压</h3><p>当数据流通过异步步骤运行时，每个步骤可能以不同的速度执行不同的事情。为了避免那些由于临时缓冲或需要跳过/删除数据而导致内存使用量增加的步骤被淹没，因此应用了所谓的背压，这是一种流控制形式，从而步骤可以表示准备处理多少项数据。使用背压允许当前步骤在通常无法知道上游将发送多少项数据的情况下限制数据流的内存使用。</p>
+<p>在RxJava中，<strong><code>Flowable</code>类被设计成支持背压，<code>Observable</code>类专用于非背压操作。<code>Single, Maybe and Completable</code>也不支持背压。</strong></p>
+<h3 id="装配时间Assembly-time"><a href="#装配时间Assembly-time" class="headerlink" title="装配时间Assembly time"></a>装配时间Assembly time</h3><p>通过应用各式各样的中间操作符来准备数据流，发生在装配时间。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Flowable&lt;Integer&gt; flow = Flowable.range(1, 5)</span><br><span class="line">.map(v -&gt; v * v)</span><br><span class="line">.filter(v -&gt; v % 3 == 0)</span><br><span class="line">;</span><br></pre></td></tr></table></figure></p>
+<p>在当前点上，数据还没有流动，也没有发生副作用。</p>
+<h3 id="订阅时间-Subscription-time"><a href="#订阅时间-Subscription-time" class="headerlink" title="订阅时间 Subscription time"></a>订阅时间 Subscription time</h3><p>这是在内部建立处理步骤链的流上调用subscribe()时的临时状态:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">flow.subscribe(System.out::println)</span><br></pre></td></tr></table></figure></p>
+<p>这时会触发订阅副作用。有些源在这种状态下会立即阻塞或开始发送数据项。</p>
+<h3 id="运行时-Runtime"><a href="#运行时-Runtime" class="headerlink" title="运行时 Runtime"></a>运行时 Runtime</h3><p>这是数据流主动发出数据项、错误或完成信号时的状态:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">Observable.create(emitter -&gt; &#123;</span><br><span class="line">     while (!emitter.isDisposed()) &#123;</span><br><span class="line">         long time = System.currentTimeMillis();</span><br><span class="line">         emitter.onNext(time);</span><br><span class="line">         if (time % 2 != 0) &#123;</span><br><span class="line">             emitter.onError(new IllegalStateException(&quot;Odd millisecond!&quot;));</span><br><span class="line">             break;</span><br><span class="line">         &#125;</span><br><span class="line">     &#125;</span><br><span class="line">&#125;)</span><br><span class="line">.subscribe(System.out::println, Throwable::printStackTrace);</span><br></pre></td></tr></table></figure></p>
+<p>实际上，这是上面给定示例的主体执行的时候。</p>
+<h3 id="简单的后台计算"><a href="#简单的后台计算" class="headerlink" title="简单的后台计算"></a>简单的后台计算</h3><p>RxJava的一个常见用例是在后台线程上运行一些计算、网络请求，并在UI线程上显示结果(或错误)<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">import io.reactivex.schedulers.Schedulers;</span><br><span class="line"></span><br><span class="line">Flowable.fromCallable(() -&gt; &#123;</span><br><span class="line">    Thread.sleep(1000); //  imitate expensive computation</span><br><span class="line">    return &quot;Done&quot;;</span><br><span class="line">&#125;)</span><br><span class="line">  .subscribeOn(Schedulers.io())</span><br><span class="line">  .observeOn(Schedulers.single())</span><br><span class="line">  .subscribe(System.out::println, Throwable::printStackTrace);</span><br><span class="line"></span><br><span class="line">Thread.sleep(2000); // &lt;--- wait for the flow to finish</span><br></pre></td></tr></table></figure></p>
+<p>这种链式调用方法的形式称为流式API，类似于builder模式。然而，RxJava的响应类型是不可变的;每个方法调用都返回一个添加了行为的新的<code>Flowable</code>。我们可以把上面的例子改写为下面这样：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">Flowable&lt;String&gt; source = Flowable.fromCallable(() -&gt; &#123;</span><br><span class="line">    Thread.sleep(1000); //  imitate expensive computation</span><br><span class="line">    return &quot;Done&quot;;</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">Flowable&lt;String&gt; runBackground = source.subscribeOn(Schedulers.io());</span><br><span class="line"></span><br><span class="line">Flowable&lt;String&gt; showForeground = runBackground.observeOn(Schedulers.single());</span><br><span class="line"></span><br><span class="line">showForeground.subscribe(System.out::println, Throwable::printStackTrace);</span><br><span class="line"></span><br><span class="line">Thread.sleep(2000);</span><br></pre></td></tr></table></figure></p>
+<p>通常，您可以通过<code>subscribeOn</code>将计算或阻塞IO移动到其他线程。一旦数据准备好，您就可以通过<code>observeOn</code>确保它们在前台或GUI线程上得到处理。</p>
+<h3 id="调度者Schedulers"><a href="#调度者Schedulers" class="headerlink" title="调度者Schedulers"></a>调度者Schedulers</h3><p>RxJava操作符不直接使用Thread或ExecutorServices，而是使用所谓的调度器Scheduler，这些调度器将并发源抽象到统一API后面。RxJava 2提供了几个可通过scheduler类访问的标准调度器。</p>
+<ul>
+<li>Schedulers.computation(): 在后台的固定数量的专用线程上运行计算密集型工作。大多数异步操作符将此作为其默认调度程序。</li>
+<li>Schedulers.io(): 在一组动态变化的线程上运行类似I/ o或阻塞操作。</li>
+<li>Schedulers.single(): 以顺序和FIFO方式在单个线程上运行工作。</li>
+<li>Schedulers.trampoline(): 在参与的线程中以顺序和FIFO方式运行工作，通常用于测试目的。</li>
+</ul>
+<p>这些在所有JVM平台上都可用，但是在某些特定的平台上，例如android，有它们特有的调度器：<code>AndroidSchedulers.mainThread(), SwingScheduler.instance() or JavaFXSchedulers.gui()</code>.</p>
+<p>此外，还可以通过<code>Scheduler .from(Executor)</code>将现有的<code>Executor</code>(及其子类型，如<code>ExecutorService</code>)包装到调度器Schedulers中。例如，可以使用它来拥有更大但仍然固定的线程池(不同于分别使用compute()和io())。</p>
+<p>上面例子结尾处的<code>Thread.sleep(2000);</code>是有意为之。在RxJava中，默认调度程序在守护线程上运行，这意味着一旦Java主线程退出，它们就会全部停止，后台计算可能永远不会发生。在这个示例场景中，休眠一段时间可以让您看到控制台上数据流流的输出。</p>
+<h3 id="流中的并发"><a href="#流中的并发" class="headerlink" title="流中的并发"></a>流中的并发</h3><p>RxJava中的流本质上是顺序的，它们被划分为可以彼此并发运行的处理阶段<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Flowable.range(1, 10)</span><br><span class="line">  .observeOn(Schedulers.computation())</span><br><span class="line">  .map(v -&gt; v * v)</span><br><span class="line">  .blockingSubscribe(System.out::println);</span><br></pre></td></tr></table></figure></p>
+<p>这个示例流将computation调度器上的数字从1平方到10，并在主线程(更准确地说，是blockingSubscribe的调用线程)上处理结果。然而lambda表达式<code>v -&gt; v * v</code>并不是并行运行的。它在同一个计算线程上依次接收1到10的值。</p>
+<h3 id="并行处理"><a href="#并行处理" class="headerlink" title="并行处理"></a>并行处理</h3><p>并行处理数字1到10稍微复杂一些:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">Flowable.range(1, 10)</span><br><span class="line">  .flatMap(v -&gt;</span><br><span class="line">      Flowable.just(v)</span><br><span class="line">        .subscribeOn(Schedulers.computation())</span><br><span class="line">        .map(w -&gt; w * w)</span><br><span class="line">  )</span><br><span class="line">  .blockingSubscribe(System.out::println);</span><br></pre></td></tr></table></figure></p>
+<p>实际上，RxJava中的并行性意味着运行独立的流并将它们的结果合并回单个流。操作符flatMap首先将1到10的每个数字映射到它自己的Flowable中，运行它们并合并计算的平方。</p>
+<p>但是，请注意，flatMap不保证任何顺序，来自内部流的最终结果可能是交错的。有其他的操作符可供选择：</p>
+<ul>
+<li><code>concatMap</code> 它每次映射并运行一个内部流</li>
+<li><code>concatMapEager</code> 它“同时”运行所有内部流，但是输出流将按照这些内部流创建的顺序输出。</li>
+</ul>
+<p>或者，<code>Flowable.parallel()</code>操作符和<code>ParallelFlowable</code>类型可以帮助实现相同的并行处理模式:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">Flowable.range(1, 10)</span><br><span class="line">  .parallel()</span><br><span class="line">  .runOn(Schedulers.computation())</span><br><span class="line">  .map(v -&gt; v * v)</span><br><span class="line">  .sequential()</span><br><span class="line">  .blockingSubscribe(System.out::println);</span><br></pre></td></tr></table></figure></p>
+<h3 id="依赖子流"><a href="#依赖子流" class="headerlink" title="依赖子流"></a>依赖子流</h3><p>flatMap是一个强大的操作符，在很多情况下都有帮助。例如，给定一个返回Flowable的服务，我们希望使用第一个服务发出的值调用另一个服务:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">Flowable&lt;Inventory&gt; inventorySource = warehouse.getInventoryAsync();</span><br><span class="line"></span><br><span class="line">inventorySource.flatMap(inventoryItem -&gt;</span><br><span class="line">    erp.getDemandAsync(inventoryItem.getId())</span><br><span class="line">    .map(demand </span><br><span class="line">        -&gt; System.out.println(&quot;Item &quot; + inventoryItem.getName() + &quot; has demand &quot; + demand));</span><br><span class="line">  )</span><br><span class="line">  .subscribe();</span><br></pre></td></tr></table></figure></p>
+<h3 id="延续Continuations"><a href="#延续Continuations" class="headerlink" title="延续Continuations"></a>延续Continuations</h3><p>有时，当一个项变得可用时，人们希望依赖它执行一些计算。这有时称为延续，根据将要发生的情况和涉及的类型，可能需要不同的操作符来实现。</p>
+<h4 id="依赖"><a href="#依赖" class="headerlink" title="依赖"></a>依赖</h4><p>最典型的场景是给定一个值，调用另一个服务，等待并使用其结果继续:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">service.apiCall()</span><br><span class="line">.flatMap(value -&gt; service.anotherApiCall(value))</span><br><span class="line">.flatMap(next -&gt; service.finalCall(next))</span><br></pre></td></tr></table></figure></p>
+<p>通常情况下，后面的序列也需要来自前面映射的值。这可以通过将外部<code>flatMap</code> 移动到上一个<code>flatMap</code>的内部来实现，例如:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">service.apiCall()</span><br><span class="line">.flatMap(value -&gt;</span><br><span class="line">    service.anotherApiCall(value)</span><br><span class="line">    .flatMap(next -&gt; service.finalCallBoth(value, next))</span><br><span class="line">)</span><br></pre></td></tr></table></figure></p>
+<p>在这里，由于lambda变量捕获，原始<code>value</code>将在内部<code>flatMap</code>中可用。</p>
+<h4 id="非依赖"><a href="#非依赖" class="headerlink" title="非依赖"></a>非依赖</h4><p>在其他场景中，第一个源/数据流的结果是不相关的，我们希望使用独立的另一个源继续。<code>flatMap</code> 也可以胜任：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Observable continued = sourceObservable.flatMapSingle(ignored -&gt; someSingleSource)</span><br><span class="line">continued.map(v -&gt; v.toString())</span><br><span class="line">  .subscribe(System.out::println, Throwable::printStackTrace);</span><br></pre></td></tr></table></figure></p>
+<p>然而，在这种情况下，延续保持Observable ，而不是可能更合适的Single.(这是可以理解的，因为从flatMapSingle的角度来看，sourceObservable是一个多值源，因此映射也可能导致多个值)</p>
+<p>虽然通常有一种方法更有表现力(也更低的开销)，即使用Completable作为中介，然后使用它的操作符andThen来继续:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">sourceObservable</span><br><span class="line">  .ignoreElements()           // returns Completable</span><br><span class="line">  .andThen(someSingleSource)</span><br><span class="line">  .map(v -&gt; v.toString())</span><br></pre></td></tr></table></figure></p>
+<p>sourceObservable和someSingleSource之间唯一的依赖关系是前者应该正常完成，以便使用后者。</p>
+<h4 id="延迟依赖"><a href="#延迟依赖" class="headerlink" title="延迟依赖"></a>延迟依赖</h4><p>有时，前一个序列和新序列之间存在隐式的数据依赖关系，由于某些原因，该依赖关系没有通过“常规通道”流动。有人会倾向于这样写延续:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">AtomicInteger count = new AtomicInteger();</span><br><span class="line"></span><br><span class="line">Observable.range(1, 10)</span><br><span class="line">  .doOnNext(ignored -&gt; count.incrementAndGet())</span><br><span class="line">  .ignoreElements()</span><br><span class="line">  .andThen(Single.just(count.get()))</span><br><span class="line">  .subscribe(System.out::println);</span><br></pre></td></tr></table></figure></p>
+<p>不幸的是，这输出0，因为<code>Single.just(count.get())</code>是在数据流尚未运行的assembly time期间计算的。我们需要一些东西，来推迟Single来源的计算，直到主要来源完成的运行时:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">AtomicInteger count = new AtomicInteger();</span><br><span class="line"></span><br><span class="line">Observable.range(1, 10)</span><br><span class="line">  .doOnNext(ignored -&gt; count.incrementAndGet())</span><br><span class="line">  .ignoreElements()</span><br><span class="line">  .andThen(Single.defer(() -&gt; Single.just(count.get())))</span><br><span class="line">  .subscribe(System.out::println);</span><br></pre></td></tr></table></figure></p>
+<p>或者<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">AtomicInteger count = new AtomicInteger();</span><br><span class="line"></span><br><span class="line">Observable.range(1, 10)</span><br><span class="line">  .doOnNext(ignored -&gt; count.incrementAndGet())</span><br><span class="line">  .ignoreElements()</span><br><span class="line">  .andThen(Single.fromCallable(() -&gt; count.get()))</span><br><span class="line">  .subscribe(System.out::println);</span><br></pre></td></tr></table></figure></p>
+<h3 id="类型转换"><a href="#类型转换" class="headerlink" title="类型转换"></a>类型转换</h3><p>有时，源或服务返回的类型与应该使用它的流不同。 例如，在上面的<a href="#依赖子流">inventory例子</a>中，<code>getDemandAsync</code> 可能返回一个<code>Single&lt;DemandRecord&gt;</code>. 如果代码示例保持不变，则会导致编译时错误(但是，通常会出现关于缺少重载的误导性错误消息)。</p>
+<p>在这种情况下，通常有两种方式来修复转换: 1) 转换为所需类型 2) 查找并使用支持不同类型的特定操作符的重载。</p>
+<h4 id="转换为所需类型"><a href="#转换为所需类型" class="headerlink" title="转换为所需类型"></a>转换为所需类型</h4><p>每个响应基类都具有可以执行此类转换(包括协议转换)的操作符，以匹配其他类型。 下面的矩阵显示了可用的转换选项:</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Flowable</th>
+<th>Observable</th>
+<th>Single</th>
+<th>Maybe</th>
+<th>Completable</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Flowable</strong></td>
+<td></td>
+<td><code>toObservable</code></td>
+<td><code>first</code>, <code>firstOrError</code>, <code>single</code>, <code>singleOrError</code>, <code>last</code>, <code>lastOrError</code><sup>1</sup></td>
+<td><code>firstElement</code>, <code>singleElement</code>, <code>lastElement</code></td>
+<td><code>ignoreElements</code></td>
+</tr>
+<tr>
+<td><strong>Observable</strong></td>
+<td><code>toFlowable</code><sup>2</sup></td>
+<td></td>
+<td><code>first</code>, <code>firstOrError</code>, <code>single</code>, <code>singleOrError</code>, <code>last</code>, <code>lastOrError</code><sup>1</sup></td>
+<td><code>firstElement</code>, <code>singleElement</code>, <code>lastElement</code></td>
+<td><code>ignoreElements</code></td>
+</tr>
+<tr>
+<td><strong>Single</strong></td>
+<td><code>toFlowable</code><sup>3</sup></td>
+<td><code>toObservable</code></td>
+<td></td>
+<td><code>toMaybe</code></td>
+<td><code>ignoreElement</code></td>
+</tr>
+<tr>
+<td><strong>Maybe</strong></td>
+<td><code>toFlowable</code><sup>3</sup></td>
+<td><code>toObservable</code></td>
+<td><code>toSingle</code></td>
+<td></td>
+<td><code>ignoreElement</code></td>
+</tr>
+<tr>
+<td><strong>Completable</strong></td>
+<td><code>toFlowable</code></td>
+<td><code>toObservable</code></td>
+<td><code>toSingle</code></td>
+<td><code>toMaybe</code></td>
+</tr>
+</tbody>
+</table>
+<p><sup>1</sup>: 当将一个多值源转换为一个单值源时，你应该决定使用多个源中的哪一个值作为结果。</p>
+<p><sup>2</sup>: 把一个<code>Observable</code>变成<code>Flowable</code> 需要一个额外的决定: 如何处理<code>Observable</code>源中潜在的无约束流? 通过<code>BackpressureStrategy</code>参数或标准的<code>Flowable</code>操作符(如<code>onBackpressureBuffer</code>、<code>onBackpressureDrop</code>、<code>onbackpressurerelatest</code>,这些操作符还允许进一步定制反压力行为。)可以使用几种策略(如缓冲、删除、保持最新状态)来处理。</p>
+<p><sup>3</sup>: 当只有(最多)一个源数据项时，背压没有问题，因为它可以一直存储到下游准备使用为止。</p>
+<h4 id="使用具有所需类型的重载"><a href="#使用具有所需类型的重载" class="headerlink" title="使用具有所需类型的重载"></a>使用具有所需类型的重载</h4><p>许多常用的操作符都有可以处理其他类型的重载。它们通常以目标类型的后缀命名:</p>
+<table>
+<thead>
+<tr>
+<th>Operator</th>
+<th>Overloads</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>flatMap</code></td>
+<td><code>flatMapSingle</code>, <code>flatMapMaybe</code>, <code>flatMapCompletable</code>, <code>flatMapIterable</code></td>
+</tr>
+<tr>
+<td><code>concatMap</code></td>
+<td><code>concatMapSingle</code>, <code>concatMapMaybe</code>, <code>concatMapCompletable</code>, <code>concatMapIterable</code></td>
+</tr>
+<tr>
+<td><code>switchMap</code></td>
+<td><code>switchMapSingle</code>, <code>switchMapMaybe</code>, <code>switchMapCompletable</code></td>
+</tr>
+</tbody>
+</table>
+<p>这些操作符具有后缀而不是简单地使用具有不同签名的相同名称的原因是类型擦除。 Java认为像<code>operator(Function&lt;T, Single&lt;R&gt;&gt;)</code> 和 <code>operator(Function&lt;T, Maybe&lt;R&gt;&gt;)</code>这样的签名是相同的(与c#不同)，并且由于擦除的原因，这两<code>operator</code>最终会成为具有相同签名的重复方法。</p>
+<h3 id="操作符命名约定"><a href="#操作符命名约定" class="headerlink" title="操作符命名约定"></a>操作符命名约定</h3><p>命名在编程中是最困难的事情之一，因为命名要求不长、具有表现力、容易捕捉和容易记忆。 不幸的是，目标语言(和已经存在的约定)在这方面可能不会提供太多的帮助(不可用的关键字、类型擦除、类型歧义等等)。</p>
+<h4 id="不可用关键字"><a href="#不可用关键字" class="headerlink" title="不可用关键字"></a>不可用关键字</h4><p>在原始的<code>Rx.NET</code>中，发出单个项然后完成的运算符称为 <code>Return(T)</code>.由于Java约定是以小写字母开头的方法名，因此它应该是<code>return(T)</code>，但这是Java中的关键字，因此不可用。 因此，RxJava选择将这个操作符命名为 <code>just(T)</code>. 操作符<code>Switch</code>也存在同样的限制，必须将其命名为 <code>switchOnNext</code>.另一个例子是<code>Catch</code>，它被命名为 <code>onErrorResumeNext</code>.</p>
+<h4 id="类型消除"><a href="#类型消除" class="headerlink" title="类型消除"></a>类型消除</h4><p>许多期望用户提供返回响应类型的函数的操作符无法重载，因为函数<code>Function&lt;T, X&gt;</code>周围的类型擦除将这些方法签名转换为重复。RxJava通过添加类型后缀来命名这些操作符:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">Flowable&lt;R&gt; <span class="title">flatMap</span><span class="params">(Function&lt;? <span class="keyword">super</span> T, ? extends Publisher&lt;? extends R&gt;&gt; mapper)</span></span></span><br><span class="line"><span class="function"></span></span><br><span class="line"><span class="function">Flowable&lt;R&gt; <span class="title">flatMapMaybe</span><span class="params">(Function&lt;? <span class="keyword">super</span> T, ? extends MaybeSource&lt;? extends R&gt;&gt; mapper)</span></span></span><br></pre></td></tr></table></figure>
+<h4 id="类型歧义"><a href="#类型歧义" class="headerlink" title="类型歧义"></a>类型歧义</h4><p>尽管某些操作符在类型擦除方面没有问题，但是是在使用Java 8和lambdas的情况下，它们的签名可能会变得含糊不清。例如，<code>concatWith</code>以各种其他反应性基类型作为参数(为了在底层实现中提供方便和性能优势)，会出现一些重载:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">Flowable&lt;T&gt; <span class="title">concatWith</span><span class="params">(Publisher&lt;? extends T&gt; other)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="function">Flowable&lt;T&gt; <span class="title">concatWith</span><span class="params">(SingleSource&lt;? extends T&gt; other)</span></span>;</span><br></pre></td></tr></table></figure>
+<p><code>Publisher</code>和<code>SingleSource</code>都以函数接口的形式出现(带有一个抽象方法的类型)，并可能鼓励用户尝试提供lambda表达式:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">someSource.concatWith(s -&gt; Single.just(<span class="number">2</span>))</span><br><span class="line">.subscribe(System.out::println, Throwable::printStackTrace);</span><br></pre></td></tr></table></figure>
+<p>不幸的是，这种方法不起作用，示例根本不打印<code>2</code>。 实际上，从2.1.10版本开始，它甚至不能编译，因为至少有4个<code>concatWith</code>重载存在，编译器发现上面的代码不明确。</p>
+<p>在这种情况下，用户可能希望延迟一些计算，直到<code>someSource</code>完成，因此正确的明确操作符应该是<code>defer</code>:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">someSource.concatWith(Single.defer(() -&gt; Single.just(<span class="number">2</span>)))</span><br><span class="line">.subscribe(System.out::println, Throwable::printStackTrace);</span><br></pre></td></tr></table></figure>
+<p>有时，添加后缀是为了避免逻辑歧义，这些歧义可能会编译，但会在流中产生错误的类型:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">Flowable&lt;T&gt; <span class="title">merge</span><span class="params">(Publisher&lt;? extends Publisher&lt;? extends T&gt;&gt; sources)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="function">Flowable&lt;T&gt; <span class="title">mergeArray</span><span class="params">(Publisher&lt;? extends T&gt;... sources)</span></span>;</span><br></pre></td></tr></table></figure>
+<p>当函数接口类型涉及到类型参数<code>T</code>时，这也会变得含糊不清。</p>
+<h4 id="错误处理"><a href="#错误处理" class="headerlink" title="错误处理"></a>错误处理</h4><p>数据流可能失败，此时错误被发送到使用者。 但是，有时多个源可能会失败，这时可以选择是否等待所有源完成或失败。为了表示这种机会，许多操作符的名称都添加了<code>DelayError</code>单词的后缀(而其他操作符的重载中则添加了<code>delayError</code>或<code>delayErrors</code> boolean标志):</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">Flowable&lt;T&gt; <span class="title">concat</span><span class="params">(Publisher&lt;? extends Publisher&lt;? extends T&gt;&gt; sources)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="function">Flowable&lt;T&gt; <span class="title">concatDelayError</span><span class="params">(Publisher&lt;? extends Publisher&lt;? extends T&gt;&gt; sources)</span></span>;</span><br></pre></td></tr></table></figure>
+<p>当然，各种各样的后缀可能出现在一起:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">Flowable&lt;T&gt; <span class="title">concatArrayEagerDelayError</span><span class="params">(Publisher&lt;? extends T&gt;... sources)</span></span>;</span><br></pre></td></tr></table></figure>
+<h4 id="基类vs基类型"><a href="#基类vs基类型" class="headerlink" title="基类vs基类型"></a>基类vs基类型</h4><p>由于基类上的静态方法和实例方法的数量太多，因此可以认为基类很重。 RxJava 2的设计深受<a href="https://github.com/reactive-streams/reactive-streams-jvm#reactive-streams" target="_blank" rel="noopener">响应流规范</a>的影响，因此，该库为每种响应类型提供了一个类和一个接口: </p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Class</th>
+<th>Interface</th>
+<th>Consumer</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0..N backpressured</td>
+<td><code>Flowable</code></td>
+<td><code>Publisher</code><sup>1</sup></td>
+<td><code>Subscriber</code></td>
+</tr>
+<tr>
+<td>0..N unbounded</td>
+<td><code>Observable</code></td>
+<td><code>ObservableSource</code><sup>2</sup></td>
+<td><code>Observer</code></td>
+</tr>
+<tr>
+<td>1 element or error</td>
+<td><code>Single</code></td>
+<td><code>SingleSource</code></td>
+<td><code>SingleObserver</code></td>
+</tr>
+<tr>
+<td>0..1 element or error</td>
+<td><code>Maybe</code></td>
+<td><code>MaybeSource</code></td>
+<td><code>MaybeObserver</code></td>
+</tr>
+<tr>
+<td>0 element or error</td>
+<td><code>Completable</code></td>
+<td><code>CompletableSource</code></td>
+<td><code>CompletableObserver</code></td>
+</tr>
+</tbody>
+</table>
+<p><sup>1</sup>The <code>org.reactivestreams.Publisher</code>是外部响应流库的一部分。它是通过受<a href="https://github.com/reactive-streams/reactive-streams-jvm#specification" target="_blank" rel="noopener">响应流规范</a>控制的标准化机制与其他响应库进行交互的主要类型。</p>
+<p><sup>2</sup>接口的命名约定是将<code>Source</code>追加到半传统的类名中。 因为<code>Publisher</code>是由响应流库提供的，所以没有<code>FlowableSource</code>(而且子类型对互操作也没有帮助)。 然而，这些接口并不是响应流规范意义上的标准接口，而且目前仅针对RxJava。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>坚持原创技术分享，您的支持将鼓励我继续创作！</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechatpay.jpg" alt="Jack 微信支付">
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/alipay.jpg" alt="Jack 支付宝">
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/RxJava2/" rel="tag"># RxJava2</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/12/02/2018-12-2-Ubuntu系统编译ijkplayer/" rel="next" title="Ubuntu系统编译ijkplayer">
+                <i class="fa fa-chevron-left"></i> Ubuntu系统编译ijkplayer
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  
+ <div id="gitalk-container"></div>
+  
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">Jack</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">9</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">6</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">7</span>
+                  <span class="site-state-item-name">标签</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          <div class="links-of-author motion-element">
+            
+          </div>
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#术语"><span class="nav-number">1.</span> <span class="nav-text">术语</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#上游，下游"><span class="nav-number">1.1.</span> <span class="nav-text">上游，下游</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#运动的对象"><span class="nav-number">1.2.</span> <span class="nav-text">运动的对象</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#背压"><span class="nav-number">1.3.</span> <span class="nav-text">背压</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#装配时间Assembly-time"><span class="nav-number">1.4.</span> <span class="nav-text">装配时间Assembly time</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#订阅时间-Subscription-time"><span class="nav-number">1.5.</span> <span class="nav-text">订阅时间 Subscription time</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#运行时-Runtime"><span class="nav-number">1.6.</span> <span class="nav-text">运行时 Runtime</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#简单的后台计算"><span class="nav-number">1.7.</span> <span class="nav-text">简单的后台计算</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#调度者Schedulers"><span class="nav-number">1.8.</span> <span class="nav-text">调度者Schedulers</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#流中的并发"><span class="nav-number">1.9.</span> <span class="nav-text">流中的并发</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#并行处理"><span class="nav-number">1.10.</span> <span class="nav-text">并行处理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#依赖子流"><span class="nav-number">1.11.</span> <span class="nav-text">依赖子流</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#延续Continuations"><span class="nav-number">1.12.</span> <span class="nav-text">延续Continuations</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#依赖"><span class="nav-number">1.12.1.</span> <span class="nav-text">依赖</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#非依赖"><span class="nav-number">1.12.2.</span> <span class="nav-text">非依赖</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#延迟依赖"><span class="nav-number">1.12.3.</span> <span class="nav-text">延迟依赖</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#类型转换"><span class="nav-number">1.13.</span> <span class="nav-text">类型转换</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#转换为所需类型"><span class="nav-number">1.13.1.</span> <span class="nav-text">转换为所需类型</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#使用具有所需类型的重载"><span class="nav-number">1.13.2.</span> <span class="nav-text">使用具有所需类型的重载</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#操作符命名约定"><span class="nav-number">1.14.</span> <span class="nav-text">操作符命名约定</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#不可用关键字"><span class="nav-number">1.14.1.</span> <span class="nav-text">不可用关键字</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#类型消除"><span class="nav-number">1.14.2.</span> <span class="nav-text">类型消除</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#类型歧义"><span class="nav-number">1.14.3.</span> <span class="nav-text">类型歧义</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#错误处理"><span class="nav-number">1.14.4.</span> <span class="nav-text">错误处理</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#基类vs基类型"><span class="nav-number">1.14.5.</span> <span class="nav-text">基类vs基类型</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Jack</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Gemini</a> v5.1.3</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.3"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.3"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.3"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.3"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.3"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.3"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.3"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+  <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+  <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+    <script src="/js/src/md5.min.js"></script>
+   <script type="text/javascript">
+        var gitalk = new Gitalk({
+          clientID: '3e08a4c04e66762c92c7',
+          clientSecret: 'b2908a3d13a62da2e790a7eaed6b38d0405d8f0b',
+          repo: 'adajqd.github.io',
+          owner: 'adaJQD',
+          admin: ['adaJQD'],
+          id: md5(location.pathname),
+          distractionFreeMode: 'true'
+        })
+        gitalk.render('gitalk-container')           
+       </script>
+
+
+  
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+  <script>AV.initialize("xq7ihVSjkVklJuy5VFoXfeSo-gzGzoHsz", "hWnVua3fWpfnMQyzVhYNswtz");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
