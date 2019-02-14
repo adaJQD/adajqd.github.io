@@ -1,0 +1,910 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.3" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png?v=5.1.3">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png?v=5.1.3">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png?v=5.1.3">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.3" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="MQTT,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="使用 SSL 对 MQTT的消息交换进行加密，提高安全性。  服务端使用的是 EMQ v2.0 客户端使用的是 Eclipse Paho Android Service  服务器启用SSL我们需要数字证书来对进行ssl通信用户进行强认证。由于获得一个真正受外界信任的证书需要花费money，所有我们采用自签名证书。 要实现双向认证（服务器认证客户端、客户端认证服务器）我们需要3个证书，一个CA证书，">
+<meta name="keywords" content="MQTT">
+<meta property="og:type" content="article">
+<meta property="og:title" content="MQTT安全：使用ssl实现EMQ与android客户端安全通信">
+<meta property="og:url" content="https://adajqd.github.io/2019/02/14/2019-2-14-MQTT安全：使用ssl实现EMQ与android客户端安全通信/index.html">
+<meta property="og:site_name" content="Jack&#39;s blog">
+<meta property="og:description" content="使用 SSL 对 MQTT的消息交换进行加密，提高安全性。  服务端使用的是 EMQ v2.0 客户端使用的是 Eclipse Paho Android Service  服务器启用SSL我们需要数字证书来对进行ssl通信用户进行强认证。由于获得一个真正受外界信任的证书需要花费money，所有我们采用自签名证书。 要实现双向认证（服务器认证客户端、客户端认证服务器）我们需要3个证书，一个CA证书，">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2019-02-14T10:49:54.925Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="MQTT安全：使用ssl实现EMQ与android客户端安全通信">
+<meta name="twitter:description" content="使用 SSL 对 MQTT的消息交换进行加密，提高安全性。  服务端使用的是 EMQ v2.0 客户端使用的是 Eclipse Paho Android Service  服务器启用SSL我们需要数字证书来对进行ssl通信用户进行强认证。由于获得一个真正受外界信任的证书需要花费money，所有我们采用自签名证书。 要实现双向认证（服务器认证客户端、客户端认证服务器）我们需要3个证书，一个CA证书，">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '5.1.3',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://adajqd.github.io/2019/02/14/2019-2-14-MQTT安全：使用ssl实现EMQ与android客户端安全通信/">
+
+
+
+
+
+  <title>MQTT安全：使用ssl实现EMQ与android客户端安全通信 | Jack's blog</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?a22ce718cdbf28822bc67e6a8dcf181d";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Jack's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://adajqd.github.io/2019/02/14/2019-2-14-MQTT安全：使用ssl实现EMQ与android客户端安全通信/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Jack">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jack's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">MQTT安全：使用ssl实现EMQ与android客户端安全通信</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-02-14T17:10:38+08:00">
+                2019-02-14
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/MQTT/" itemprop="url" rel="index">
+                    <span itemprop="name">MQTT</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2019/02/14/2019-2-14-MQTT安全：使用ssl实现EMQ与android客户端安全通信/" class="leancloud_visitors" data-flag-title="MQTT安全：使用ssl实现EMQ与android客户端安全通信">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>使用 SSL 对 MQTT的消息交换进行加密，提高安全性。</p>
+<ul>
+<li>服务端使用的是 <a href="http://emqtt.com/" target="_blank" rel="noopener">EMQ v2.0</a></li>
+<li>客户端使用的是 <a href="https://www.eclipse.org/paho/clients/android/" target="_blank" rel="noopener">Eclipse Paho Android Service</a></li>
+</ul>
+<h2 id="服务器启用SSL"><a href="#服务器启用SSL" class="headerlink" title="服务器启用SSL"></a>服务器启用SSL</h2><p>我们需要数字证书来对进行ssl通信用户进行强认证。由于获得一个真正受外界信任的证书需要花费money，所有我们采用自签名证书。</p>
+<p>要实现双向认证（服务器认证客户端、客户端认证服务器）我们需要3个证书，一个CA证书，一个EMQ服务器证书，一个客户端证书。</p>
+<p>具体的生成证书操作、启用EMQ ssl和双向认证，参考这篇文章 <a href="https://medium.com/@emqtt/securing-emq-connections-with-ssl-432672ab9f06" target="_blank" rel="noopener">Securing EMQ Connections with SSL</a></p>
+<a id="more"></a>
+<h2 id="android客户端的ssl实现"><a href="#android客户端的ssl实现" class="headerlink" title="android客户端的ssl实现"></a>android客户端的ssl实现</h2><p>上一步我们生成了客户端使用的证书 <code>MyClient1.pem</code> 和私有秘钥<code>MyClient1.key</code>，但是要想在android上使用需要将其转成<code>bks</code>格式。</p>
+<h3 id="pem-转-bks"><a href="#pem-转-bks" class="headerlink" title="pem 转 bks"></a>pem 转 bks</h3><p>1、首先生成<code>.p12</code>文件：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">openssl pkcs12 -export -nodes -in MyClient1.pem -inkey MyClient1.key -out client.p12</span><br></pre></td></tr></table></figure>
+<ul>
+<li><code>-inkey</code>为私钥文件</li>
+<li><code>-in</code>为证书，如果pem私钥没有密码，则使用<code>-nodes</code>表示无密码，如果有密码使用<code>-passin</code>；如果私钥和证书都在同一文件里则<code>-in</code>和<code>-inkey</code>指定同一个文件。</li>
+</ul>
+<blockquote>
+<p>会提示输入给.p12秘钥库设置的密码，请记住，下面会用到</p>
+</blockquote>
+<p>2、生成<code>.bks</code>证书：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">keytool -importkeystore -srckeystore client.p12 -srcstoretype pkcs12 -destkeystore client.bks -deststoretype bks -provider org.bouncycastle.jce.provider.BouncyCastleProvider -providerpath bcprov-ext-jdk15on-158.jar</span><br></pre></td></tr></table></figure>
+<p>使用 KeyTool 转换为 BKS 格式时，需要 <code>bcprov-ext-jdk15on-158.jar</code>，可以在 <a href="https://pan.baidu.com/s/1CR6w_EUiUsN_b6muMwDfCA" target="_blank" rel="noopener">这里</a> 找到。文件路径直接带在<code>-providerpath</code> 参数后面即可。也可以把jar包放到如下路径：<code>jdk/jre/lib/ext</code>，从而省略<code>-providerpath</code>。</p>
+<blockquote>
+<p>会首先提示输入给bks秘钥库设置的密码，请记住，下面会用到。<br><br>然后会提示输入p12秘钥库密码，即上一步设置的密码。</p>
+</blockquote>
+<p>3、查看bks证书库列表进行验证<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">keytool -list -rfc -keystore client.bks -storetype BKS -provider org.bouncycastle.jce.provider.BouncyCastleProvider -storepass &apos;bks秘钥库密码&apos;</span><br></pre></td></tr></table></figure></p>
+<h3 id="源码"><a href="#源码" class="headerlink" title="源码"></a>源码</h3><p>完整源码见 <a href="https://github.com/adaJQD/Paho-MQTT-Android-TCP-TLS-WSS-Example" target="_blank" rel="noopener">GitHub</a></p>
+<h4 id="主要代码"><a href="#主要代码" class="headerlink" title="主要代码"></a>主要代码</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br><span class="line">206</span><br><span class="line">207</span><br><span class="line">208</span><br><span class="line">209</span><br><span class="line">210</span><br><span class="line">211</span><br><span class="line">212</span><br><span class="line">213</span><br><span class="line">214</span><br><span class="line">215</span><br><span class="line">216</span><br><span class="line">217</span><br><span class="line">218</span><br><span class="line">219</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> paho.android.mqtt_example;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> android.util.Log;</span><br><span class="line"><span class="keyword">import</span> java.io.IOException;</span><br><span class="line"><span class="keyword">import</span> java.io.InputStream;</span><br><span class="line"><span class="keyword">import</span> java.net.InetAddress;</span><br><span class="line"><span class="keyword">import</span> java.net.Socket;</span><br><span class="line"><span class="keyword">import</span> java.security.KeyManagementException;</span><br><span class="line"><span class="keyword">import</span> java.security.KeyStore;</span><br><span class="line"><span class="keyword">import</span> java.security.KeyStoreException;</span><br><span class="line"><span class="keyword">import</span> java.security.NoSuchAlgorithmException;</span><br><span class="line"><span class="keyword">import</span> java.security.UnrecoverableKeyException;</span><br><span class="line"><span class="keyword">import</span> java.security.cert.CertificateFactory;</span><br><span class="line"><span class="keyword">import</span> java.security.cert.X509Certificate;</span><br><span class="line"><span class="keyword">import</span> javax.net.ssl.KeyManagerFactory;</span><br><span class="line"><span class="keyword">import</span> javax.net.ssl.SSLContext;</span><br><span class="line"><span class="keyword">import</span> javax.net.ssl.SSLSocket;</span><br><span class="line"><span class="keyword">import</span> javax.net.ssl.TrustManager;</span><br><span class="line"><span class="keyword">import</span> javax.net.ssl.TrustManagerFactory;</span><br><span class="line"><span class="keyword">import</span> javax.security.cert.CertificateException;</span><br><span class="line"><span class="keyword">import</span> timber.log.Timber;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Original SocketFactory file taken from https://github.com/owntracks/android</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SelfSignedSocketFactory</span> <span class="keyword">extends</span> <span class="title">javax</span>.<span class="title">net</span>.<span class="title">ssl</span>.<span class="title">SSLSocketFactory</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> javax.net.ssl.SSLSocketFactory factory;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">SocketFactoryOptions</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">private</span> InputStream caCrtInputStream;</span><br><span class="line">        <span class="keyword">private</span> InputStream caClientBksInputStream;</span><br><span class="line">        <span class="keyword">private</span> String caClientBksPassword;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        <span class="comment">/**</span></span><br><span class="line"><span class="comment">         *</span></span><br><span class="line"><span class="comment">         * <span class="doctag">@param</span> stream the self-signed Root CA Certificate's stream</span></span><br><span class="line"><span class="comment">         * <span class="doctag">@return</span></span></span><br><span class="line"><span class="comment">         */</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> SocketFactoryOptions <span class="title">withCaInputStream</span><span class="params">(InputStream stream)</span> </span>&#123;</span><br><span class="line">            <span class="keyword">this</span>.caCrtInputStream = stream;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">this</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        <span class="comment">/**</span></span><br><span class="line"><span class="comment">         *</span></span><br><span class="line"><span class="comment">         * <span class="doctag">@param</span> stream the self-signed client Certificate's stream .</span></span><br><span class="line"><span class="comment">         * <span class="doctag">@return</span></span></span><br><span class="line"><span class="comment">         */</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> SocketFactoryOptions <span class="title">withClientBksInputStream</span><span class="params">(InputStream stream)</span> </span>&#123;</span><br><span class="line">            <span class="keyword">this</span>.caClientBksInputStream = stream;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">this</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">public</span> SocketFactoryOptions <span class="title">withClientBksPassword</span><span class="params">(String password)</span> </span>&#123;</span><br><span class="line">            <span class="keyword">this</span>.caClientBksPassword = password;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">this</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">hasCaCrt</span><span class="params">()</span> </span>&#123;</span><br><span class="line">            <span class="keyword">return</span> caCrtInputStream != <span class="keyword">null</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">hasClientBksCrt</span><span class="params">()</span> </span>&#123;</span><br><span class="line">            <span class="keyword">return</span> caClientBksPassword != <span class="keyword">null</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">public</span> InputStream <span class="title">getCaCrtInputStream</span><span class="params">()</span> </span>&#123;</span><br><span class="line">            <span class="keyword">return</span> caCrtInputStream;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">public</span> InputStream <span class="title">getCaClientBksInputStream</span><span class="params">()</span> </span>&#123;</span><br><span class="line">            <span class="keyword">return</span> caClientBksInputStream;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">public</span> String <span class="title">getCaClientBksPassword</span><span class="params">()</span> </span>&#123;</span><br><span class="line">            <span class="keyword">return</span> caClientBksPassword;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">hasClientBksPassword</span><span class="params">()</span> </span>&#123;</span><br><span class="line">            <span class="keyword">return</span> (caClientBksPassword != <span class="keyword">null</span>) &amp;&amp; !caClientBksPassword.equals(<span class="string">""</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">SelfSignedSocketFactory</span><span class="params">()</span></span></span><br><span class="line"><span class="function">        <span class="keyword">throws</span> CertificateException, KeyStoreException, NoSuchAlgorithmException, IOException, KeyManagementException,</span></span><br><span class="line"><span class="function">               java.security.cert.CertificateException, UnrecoverableKeyException </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>(<span class="keyword">new</span> SocketFactoryOptions());</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> TrustManagerFactory tmf;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">SelfSignedSocketFactory</span><span class="params">(SocketFactoryOptions options)</span></span></span><br><span class="line"><span class="function">        <span class="keyword">throws</span> KeyStoreException, NoSuchAlgorithmException, IOException, KeyManagementException,</span></span><br><span class="line"><span class="function">               java.security.cert.CertificateException, UnrecoverableKeyException </span>&#123;</span><br><span class="line">        Log.v(<span class="keyword">this</span>.toString(), <span class="string">"initializing CustomSocketFactory"</span>);</span><br><span class="line"></span><br><span class="line">        tmf = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());</span><br><span class="line">        KeyManagerFactory kmf = KeyManagerFactory.getInstance(<span class="string">"X509"</span>);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (options.hasCaCrt()) &#123;</span><br><span class="line">            Log.v(<span class="keyword">this</span>.toString(), <span class="string">"MQTT_CONNECTION_OPTIONS.hasCaCrt(): true"</span>);</span><br><span class="line">            <span class="comment">// CA certificate is used to authenticate server</span></span><br><span class="line">            CertificateFactory cAf = CertificateFactory.getInstance(<span class="string">"X.509"</span>);</span><br><span class="line">            X509Certificate ca = (X509Certificate) cAf.generateCertificate(options.getCaCrtInputStream());</span><br><span class="line">            KeyStore caKs = KeyStore.getInstance(KeyStore.getDefaultType());</span><br><span class="line">            caKs.load(<span class="keyword">null</span>, <span class="keyword">null</span>);</span><br><span class="line">            caKs.setCertificateEntry(<span class="string">"ca-certificate"</span>, ca);</span><br><span class="line">            tmf.init(caKs);</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            Timber.v(<span class="string">"CA sideload: false, using system keystore"</span>);</span><br><span class="line">            KeyStore keyStore = KeyStore.getInstance(<span class="string">"AndroidCAStore"</span>);</span><br><span class="line">            keyStore.load(<span class="keyword">null</span>);</span><br><span class="line">            tmf.init(keyStore);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (options.hasClientBksCrt()) &#123;</span><br><span class="line">            Log.v(<span class="keyword">this</span>.toString(), <span class="string">"MQTT_CONNECTION_OPTIONS.hasClientBksCrt(): true"</span>);</span><br><span class="line"></span><br><span class="line">            <span class="comment">// init client key store</span></span><br><span class="line">            KeyStore clientkeyStore = KeyStore.getInstance(<span class="string">"BKS"</span>);</span><br><span class="line">            clientkeyStore.load(options.getCaClientBksInputStream(),</span><br><span class="line">                options.hasClientBksPassword() ? options.getCaClientBksPassword().toCharArray() : <span class="keyword">new</span> <span class="keyword">char</span>[<span class="number">0</span>]);</span><br><span class="line">            kmf.init(clientkeyStore,</span><br><span class="line">                options.hasClientBksPassword() ? options.getCaClientBksPassword().toCharArray() : <span class="keyword">new</span> <span class="keyword">char</span>[<span class="number">0</span>]);</span><br><span class="line"></span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            Log.v(<span class="keyword">this</span>.toString(), <span class="string">"Client .bks sideload: false, using null CLIENT cert"</span>);</span><br><span class="line">            kmf.init(<span class="keyword">null</span>, <span class="keyword">null</span>);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// Create an SSLContext that uses our TrustManager</span></span><br><span class="line">        SSLContext context = SSLContext.getInstance(<span class="string">"TLSv1.2"</span>);</span><br><span class="line">        context.init(kmf.getKeyManagers(), getTrustManagers(), <span class="keyword">null</span>);</span><br><span class="line">        <span class="keyword">this</span>.factory = context.getSocketFactory();</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> TrustManager[] getTrustManagers() &#123;</span><br><span class="line">        <span class="keyword">return</span> tmf.getTrustManagers();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> String[] getDefaultCipherSuites() &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">this</span>.factory.getDefaultCipherSuites();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> String[] getSupportedCipherSuites() &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">this</span>.factory.getSupportedCipherSuites();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Socket <span class="title">createSocket</span><span class="params">()</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">        SSLSocket r = (SSLSocket) <span class="keyword">this</span>.factory.createSocket();</span><br><span class="line">        r.setEnabledProtocols(<span class="keyword">new</span> String[] &#123; <span class="string">"TLSv1"</span>, <span class="string">"TLSv1.1"</span>, <span class="string">"TLSv1.2"</span> &#125;);</span><br><span class="line">        <span class="keyword">return</span> r;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Socket <span class="title">createSocket</span><span class="params">(Socket s, String host, <span class="keyword">int</span> port, <span class="keyword">boolean</span> autoClose)</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">        SSLSocket r = (SSLSocket) <span class="keyword">this</span>.factory.createSocket(s, host, port, autoClose);</span><br><span class="line">        r.setEnabledProtocols(<span class="keyword">new</span> String[] &#123; <span class="string">"TLSv1"</span>, <span class="string">"TLSv1.1"</span>, <span class="string">"TLSv1.2"</span> &#125;);</span><br><span class="line">        <span class="keyword">return</span> r;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Socket <span class="title">createSocket</span><span class="params">(String host, <span class="keyword">int</span> port)</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line"></span><br><span class="line">        SSLSocket r = (SSLSocket) <span class="keyword">this</span>.factory.createSocket(host, port);</span><br><span class="line">        r.setEnabledProtocols(<span class="keyword">new</span> String[] &#123; <span class="string">"TLSv1"</span>, <span class="string">"TLSv1.1"</span>, <span class="string">"TLSv1.2"</span> &#125;);</span><br><span class="line">        <span class="keyword">return</span> r;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Socket <span class="title">createSocket</span><span class="params">(String host, <span class="keyword">int</span> port, InetAddress localHost, <span class="keyword">int</span> localPort)</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">        SSLSocket r = (SSLSocket) <span class="keyword">this</span>.factory.createSocket(host, port, localHost, localPort);</span><br><span class="line">        r.setEnabledProtocols(<span class="keyword">new</span> String[] &#123; <span class="string">"TLSv1"</span>, <span class="string">"TLSv1.1"</span>, <span class="string">"TLSv1.2"</span> &#125;);</span><br><span class="line">        <span class="keyword">return</span> r;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Socket <span class="title">createSocket</span><span class="params">(InetAddress host, <span class="keyword">int</span> port)</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">        SSLSocket r = (SSLSocket) <span class="keyword">this</span>.factory.createSocket(host, port);</span><br><span class="line">        r.setEnabledProtocols(<span class="keyword">new</span> String[] &#123; <span class="string">"TLSv1"</span>, <span class="string">"TLSv1.1"</span>, <span class="string">"TLSv1.2"</span> &#125;);</span><br><span class="line">        <span class="keyword">return</span> r;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Socket <span class="title">createSocket</span><span class="params">(InetAddress address, <span class="keyword">int</span> port, InetAddress localAddress, <span class="keyword">int</span> localPort)</span></span></span><br><span class="line"><span class="function">        <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">        SSLSocket r = (SSLSocket) <span class="keyword">this</span>.factory.createSocket(address, port, localAddress, localPort);</span><br><span class="line">        r.setEnabledProtocols(<span class="keyword">new</span> String[] &#123; <span class="string">"TLSv1"</span>, <span class="string">"TLSv1.1"</span>, <span class="string">"TLSv1.2"</span> &#125;);</span><br><span class="line">        <span class="keyword">return</span> r;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>坚持原创技术分享，您的支持将鼓励我继续创作！</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechatpay.jpg" alt="Jack 微信支付">
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/alipay.jpg" alt="Jack 支付宝">
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/MQTT/" rel="tag"># MQTT</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/01/16/2019-1-16-RxJava2正史Ⅰ：FlatMap操作符/" rel="next" title="RxJava2正史Ⅰ：FlatMap操作符">
+                <i class="fa fa-chevron-left"></i> RxJava2正史Ⅰ：FlatMap操作符
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  
+ <div id="gitalk-container"></div>
+  
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">Jack</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">11</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">7</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">8</span>
+                  <span class="site-state-item-name">标签</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          <div class="links-of-author motion-element">
+            
+          </div>
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#服务器启用SSL"><span class="nav-number">1.</span> <span class="nav-text">服务器启用SSL</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#android客户端的ssl实现"><span class="nav-number">2.</span> <span class="nav-text">android客户端的ssl实现</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#pem-转-bks"><span class="nav-number">2.1.</span> <span class="nav-text">pem 转 bks</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#源码"><span class="nav-number">2.2.</span> <span class="nav-text">源码</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#主要代码"><span class="nav-number">2.2.1.</span> <span class="nav-text">主要代码</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Jack</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Gemini</a> v5.1.3</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.3"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.3"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.3"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.3"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.3"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.3"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.3"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+  <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+  <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+    <script src="/js/src/md5.min.js"></script>
+   <script type="text/javascript">
+        var gitalk = new Gitalk({
+          clientID: '3e08a4c04e66762c92c7',
+          clientSecret: 'b2908a3d13a62da2e790a7eaed6b38d0405d8f0b',
+          repo: 'adajqd.github.io',
+          owner: 'adaJQD',
+          admin: ['adaJQD'],
+          id: md5(location.pathname),
+          distractionFreeMode: 'true'
+        })
+        gitalk.render('gitalk-container')           
+       </script>
+
+
+  
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+  <script>AV.initialize("xq7ihVSjkVklJuy5VFoXfeSo-gzGzoHsz", "hWnVua3fWpfnMQyzVhYNswtz");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
